@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+<context:component-scan base-package="model" />
+
+<!--testing data-->
+<!--  user beans  -->
+    <bean class="model.User" id="user1" scope="prototype">
+        <property name="email" value="aa@aa.aa" />
+        <property name="userFullName" value="aaaa aa" />
+        <property name="password" value="111" />
+        <property name="userName" value="aaa" />
+    </bean>
+    <bean class="model.User" id="user2" scope="prototype" parent="user1">
+        <property name="email" value="bb@bb.bb" />
+        <property name="userFullName" value="bbbb bb" />
+        <property name="userName" value="bbb" />
+    </bean>
+    <bean class="model.User" id="user3" scope="prototype" parent="user1">
+        <property name="email" value="cc@cc.cc" />
+        <property name="userFullName" value="cccc cc" />
+        <property name="userName" value="ccc" />
+    </bean>
+<!--  message beans  -->
+    <bean class="model.UserMessage" id="message1" scope="prototype">
+        <property name="messageID" value="1" />
+        <property name="creationDate" value="date01" />
+        <property name="creator" ref="user1" />
+        <property name="messageBody" value="dada" />
+        <property name="messageTopic" value="dadaTopic" />
+    </bean>
+    <bean class="model.UserMessage" id="message2" scope="prototype" parent="message1">
+        <property name="messageID" value="2" />
+        <property name="creationDate" value="date02" />
+        <property name="messageBody" value="nana" />
+        <property name="messageTopic" value="nanaTopic" />
+    </bean>
+    <bean class="model.UserMessage" id="message3" scope="prototype">
+        <property name="messageID" value="3" />
+        <property name="creationDate" value="date03" />
+        <property name="creator" ref="user2" />
+        <property name="messageBody" value="okok" />
+        <property name="messageTopic" value="okokTopic" />
+    </bean>
+<!--  lists of user and message beans  -->
+    <bean id="usersList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="user1" />
+                <ref bean="user2" />
+                <ref bean="user3" />
+            </list>
+        </constructor-arg>
+    </bean>
+<!-- END TEST BEANS   -->
+    <bean id="messagesList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="message1" />
+                <ref bean="message2" />
+                <ref bean="message3" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    
 
 </beans>
