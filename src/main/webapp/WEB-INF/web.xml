@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-<!-- context config path -->
+<!-- context config.db.postgres path -->
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/spring/appContextConfig.xml</param-value>
@@ -23,11 +23,12 @@
     
     <load-on-startup>1</load-on-startup>
 </servlet>
-
+<!-- mapping dispatcher servlet -->
 <servlet-mapping>
     <servlet-name>mvc-dispatcher</servlet-name>
     <url-pattern></url-pattern>
-    <url-pattern>/123</url-pattern>
+    <url-pattern>/</url-pattern>
+    <url-pattern>/login</url-pattern>
 </servlet-mapping>
 
 </web-app>
