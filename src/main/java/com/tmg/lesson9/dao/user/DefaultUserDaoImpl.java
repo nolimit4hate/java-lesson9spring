@@ -1,22 +1,43 @@
 package com.tmg.lesson9.dao.user;
 
 
+import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.model.user.UserModel;
+import com.tmg.lesson9.validator.user.dao.UserDaoValidator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.Validate.isTrue;
+
 @Repository
 public class DefaultUserDaoImpl implements UserDao {
 
     private NamedParameterJdbcTemplate namedJdbcTemplate;
+
+    @Resource
+    UserDaoValidator defaultUserDaoValidatorImpl;
+
+    private final static String USERS_TABLE = "users";
+    private final static String USERS_INSERT_PARAMS_SEPARATED_BY_COMMA =
+            "user_name, user_email, user_password, user_gender, user_country, creation_date_time";
+    private final static String USERS_SELECT_PARAMS_SEPARATED_BY_COMMA =
+            "user_id, " + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA;
+
+
+
 
     @Autowired
     public DefaultUserDaoImpl(NamedParameterJdbcTemplate namedJdbcTemplate) {
@@ -24,11 +45,12 @@ public class DefaultUserDaoImpl implements UserDao {
     }
 
     @Override
-    public UserModel selectUserNameFromUsers(String userName) {
+    public UserModel selectUserByNameFromUsers(String userName) throws CustomDaoException {
+        defaultUserDaoValidatorImpl.isUserNameValid(userName);
         UserModel userModel;
-        String querySelectUserByName = "SELECT" +
-                " user_id, user_name, user_email, user_password, user_gender, user_country, creation_date_time" +
-                " FROM users WHERE user_name= :name";
+        String querySelectUserByName =
+                "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
+                " FROM " + USERS_TABLE + " WHERE user_name= :name";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("name", userName);
         UserMapper userMapper = new UserMapper();
@@ -37,31 +59,43 @@ public class DefaultUserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean selectUserNamePasswordFromUsers(String userName, String userPassword) {
-        UserModel userModel = null;
-        String querySelectUserByNamePass = "SELECT" +
-                " user_id, user_name, user_email, user_password, user_gender, user_country, creation_date_time" +
-                " FROM users WHERE user_name= :name AND user_password= :password";
+    public boolean selectUserByNamePasswordFromUsers(String userName, String userPassword) throws CustomDaoException {
+        isTrue(isNotBlank(userName), "User name is blank");
+
+        defaultUserDaoValidatorImpl.isUserNameValid(userName);
+        defaultUserDaoValidatorImpl.isUserPasswordValid(userPassword);
+        UserModel userModel;
+        String querySelectUserByNamePass =
+                "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
+                " FROM " + USERS_TABLE + " WHERE user_name= :name AND user_password= :password";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("name", userName);
         mapSqlParameterSource.addValue("password", userPassword);
         UserMapper userMapper = new UserMapper();
-        userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
-        if(userModel == null){
-            return false;
-        } else {
+        try {
+            userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
+            defaultUserDaoValidatorImpl.isUserModelValid(userModel);
             return true;
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomDaoException("DAO Error: entering name={" + userName +
+                    "} and password={" + userPassword + "} ", e);
         }
     }
 
     @Override
-    public boolean insertIntoUsers(UserModel user) {
-        String queryInputUser = "INSERT INTO users " +
-                "(user_name, user_email, user_password, user_gender, user_country, creation_date_time)" +
+    public boolean insertIntoUsers(UserModel user) throws CustomDaoException {
+        defaultUserDaoValidatorImpl.isUserModelValid(user);
+        String queryInputUser =
+                "INSERT INTO " + USERS_TABLE + " (" + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA + ") " +
                 " values(:name, :email, :password, :gender, :country, :dateTime);";
         Map<String, String> userParam = getUserParamMap(user);
-        namedJdbcTemplate.update(queryInputUser, userParam);
-        return true;
+        try {
+            namedJdbcTemplate.update(queryInputUser, userParam);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomDaoException("DAO Error: entering name={" + user.getUserName() +
+                    "} or email={" + user.getEmail() + "} already exists", e);
+        }
     }
 
     private Map<String, String> getUserParamMap(UserModel user){

@@ -14,7 +14,7 @@ public class DefaultBaseDateTimeValidatorImpl implements BaseDateTimeValidator {
         if(dateTime.length() > 17 && dateTime.length() < 21){
             return true;
         } else {
-            return false;
+            throw new IllegalArgumentException("date-time must be in format yyyy-mm-dd hh:mm:ss");
         }
     }
 }

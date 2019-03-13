@@ -1,6 +1,6 @@
 package com.tmg.lesson9.validator.user.dao;
 
-import com.tmg.lesson9.dao.exception.DaoCustomException;
+import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.validator.base.user.BaseUserValidator;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@Component
+@Component("userDaoValidator")
 public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
 
     @Resource
@@ -17,25 +17,21 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     BaseStringFieldValidator defaultBaseStringFieldValidatorImpl;
 
     @Override
-    public boolean isUserNameValid(String name) throws DaoCustomException {
-        try{
+    public boolean isUserNameValid(String name) throws CustomDaoException {
             return defaultBaseUserValidatorImpl.isUserNameValid(name);
-        } catch (IllegalArgumentException e) {
-            throw new DaoCustomException(e.getMessage());
-        }
     }
 
     @Override
-    public boolean isUserPasswordValid(String password) throws DaoCustomException {
+    public boolean isUserPasswordValid(String password) throws CustomDaoException {
         try {
             return defaultBaseUserValidatorImpl.isPasswordValid(password);
         } catch (IllegalArgumentException e) {
-            throw new DaoCustomException(e.getMessage());
+            throw new CustomDaoException(e.getMessage(), e);
         }
     }
 
     @Override
-    public boolean isUserModelValid(UserModel userModel) throws DaoCustomException {
+    public boolean isUserModelValid(UserModel userModel) throws CustomDaoException {
         try{
             if (defaultBaseUserValidatorImpl.isUserModelValid(userModel) &&
                     defaultBaseStringFieldValidatorImpl.isStringFieldsValidByLength(0, 40, userModel.getUserName()) &&
@@ -45,11 +41,11 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
 
                 return true;
             } else {
-                throw new DaoCustomException("user model fields user name, email, password must have length from 0 to 40;" +
-                        "user model field dateTime must have length from 0 to 20");
+                throw new CustomDaoException("user model fields user name, email, password length must be from 0 to 40;" +
+                        "user model field dateTime length must be from 0 to 20");
             }
         } catch (IllegalArgumentException e) {
-            throw new DaoCustomException(e.getMessage());
+            throw new CustomDaoException(e.getMessage(), e);
         }
     }
 

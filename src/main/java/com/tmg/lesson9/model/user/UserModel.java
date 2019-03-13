@@ -2,7 +2,7 @@ package com.tmg.lesson9.model.user;
 
 public class UserModel  {
 
-    private int id;
+    private int id = 0;
     private String userName;
     private String email;
     private String password;

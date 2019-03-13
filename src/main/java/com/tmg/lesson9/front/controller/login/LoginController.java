@@ -1,13 +1,17 @@
 package com.tmg.lesson9.front.controller.login;
 
+import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.user.UserFacade;
+import com.tmg.lesson9.front.controller.error.ErrorModelViewCreator;
 import com.tmg.lesson9.front.data.SessionUserData;
 import com.tmg.lesson9.front.form.LoginForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -46,5 +50,10 @@ public class LoginController {
             model.addAttribute(errorMessage);
             return "/login";
         }
+    }
+
+    @ExceptionHandler(CustomFacadeException.class)
+    public ModelAndView handleFacadeException(HttpServletRequest request, RuntimeException exception){
+        return ErrorModelViewCreator.createErrorModelView(exception, "Login error");
     }
 }

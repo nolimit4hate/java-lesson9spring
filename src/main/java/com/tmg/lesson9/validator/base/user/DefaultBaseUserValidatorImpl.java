@@ -33,20 +33,28 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
         if(userModel == null){
             throw new IllegalArgumentException("user model cant be null");
         }
-        if(isIdValid() && isNameValid() && isPasswordValid() && isEmailValid() && isCountryValid() && isGenderValid() &&
-                isDateTimeValid()){
-            return true;
-        } else {
-            return false;
-        }
+        this.user = userModel;
+        isAllParamsValid();
+        return true;
     }
 
-    private boolean isIdValid() {
+    private boolean isAllParamsValid() throws IllegalArgumentException {
+        isIdValid();
+        isNameValid();
+        isPasswordValid();
+        isEmailValid();
+        isCountryValid();
+        isGenderValid();
+        isDateTimeValid();
+        return true;
+    }
+
+    private boolean isIdValid() throws IllegalArgumentException {
         int userId = user.getId();
         if(userId >= 0){
             return true;
         } else {
-            return false;
+            throw new IllegalArgumentException("user id must be >= 0");
         }
     }
 

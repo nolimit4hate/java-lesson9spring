@@ -1,12 +1,13 @@
 package com.tmg.lesson9.validator.message.service;
 
-import com.tmg.lesson9.facade.exception.ServiceCustomException;
+import com.tmg.lesson9.service.exception.CustomServiceException;
 import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.validator.base.message.BaseMessageValidator;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Component
 public class DefaultMessageServiceValidatorImpl implements MessageServiceValidator {
@@ -17,29 +18,33 @@ public class DefaultMessageServiceValidatorImpl implements MessageServiceValidat
     BaseStringFieldValidator defaultBaseStringFieldValidatorImpl;
 
     @Override
-    public boolean isMessageCreatorValid(String creator) throws ServiceCustomException {
+    public boolean isMessageCreatorValid(String creator) throws CustomServiceException {
         try{
             return defaultBaseMessageValidatorImpl.isMessageCreatorValid(creator);
         } catch (IllegalArgumentException e){
-            throw new ServiceCustomException(e.getMessage());
+            throw new CustomServiceException(e.getMessage(), e);
         }
     }
 
     @Override
-    public boolean isMessageModelValid(MessageModel messageModel) throws ServiceCustomException {
-        boolean result;
+    public boolean isMessageModelValid(MessageModel messageModel) throws CustomServiceException {
         try{
-            result = defaultBaseMessageValidatorImpl.isMessageModelValid(messageModel);
+            defaultBaseMessageValidatorImpl.isMessageModelValid(messageModel);
             // valid business logic
-            if(result == true && defaultBaseStringFieldValidatorImpl.isStringFieldsValidByLength(5, 50, messageModel.getMessageTopic()) &&
-            defaultBaseStringFieldValidatorImpl.isStringFieldsValidByLength(10, 200, messageModel.getMessageBody())){
-                return true;
-            } else {
-                throw new ServiceCustomException("message topic must have length from 5 to 50;" +
-                        " message body must have length from 10 to 200");
-            }
+            defaultBaseStringFieldValidatorImpl.isStringFieldsValidByLength(5, 50, messageModel.getMessageTopic());
+            defaultBaseStringFieldValidatorImpl.isStringFieldsValidByLength(10, 200, messageModel.getMessageBody());
+            return true;
         } catch (IllegalArgumentException e){
-            throw new ServiceCustomException(e.getMessage());
+            throw new CustomServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public boolean isMessageModelListValid(List<MessageModel> messageModelList) throws CustomServiceException {
+        try {
+            return defaultBaseMessageValidatorImpl.isMessageModelListValid(messageModelList);
+        } catch (IllegalArgumentException e) {
+            throw new CustomServiceException(e.getMessage(), e);
         }
     }
 }

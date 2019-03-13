@@ -1,14 +1,19 @@
 package com.tmg.lesson9.front.controller.registration;
 
+import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.user.UserFacade;
+import com.tmg.lesson9.front.controller.error.ErrorModelViewCreator;
 import com.tmg.lesson9.front.form.RegistrationForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,15 +45,15 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String addUser(@ModelAttribute RegistrationForm user, Model model) {
-        if(defaultUserFacadeImpl.addUser(user)){
-            String successMessage = "user " + user.getName() + " was registered !";
-            model.addAttribute("successMessage", successMessage);
-            return "successPage";
-        } else {
-            String errorMessage = "Something goes wrong";
-            model.addAttribute(errorMessage);
-            return "registration";
-        }
+        defaultUserFacadeImpl.addUser(user);
+        String successMessage = "user " + user.getName() + " was registered !";
+        model.addAttribute("successMessage", successMessage);
+        return "successPage";
+    }
+
+    @ExceptionHandler(CustomFacadeException.class)
+    public ModelAndView handleCustomFacadeException(HttpServletRequest request, Exception exception){
+        return ErrorModelViewCreator.createErrorModelView(exception, "Registration error");
     }
 
     /**

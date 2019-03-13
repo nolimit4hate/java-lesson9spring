@@ -1,11 +1,11 @@
 package com.tmg.lesson9.validator.user.dao;
 
-import com.tmg.lesson9.dao.exception.DaoCustomException;
+import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.model.user.UserModel;
 
 public interface UserDaoValidator {
 
-    boolean isUserNameValid(String name) throws DaoCustomException;
-    boolean isUserPasswordValid(String password) throws DaoCustomException;
-    boolean isUserModelValid(UserModel userModel) throws DaoCustomException;
+    boolean isUserNameValid(String name) throws CustomDaoException;
+    boolean isUserPasswordValid(String password) throws CustomDaoException;
+    boolean isUserModelValid(UserModel userModel) throws CustomDaoException;
 }

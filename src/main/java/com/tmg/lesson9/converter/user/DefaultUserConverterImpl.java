@@ -1,18 +1,12 @@
 package com.tmg.lesson9.converter.user;
 
-import com.tmg.lesson9.converter.util.ClassChecker;
 import com.tmg.lesson9.front.form.RegistrationForm;
 import com.tmg.lesson9.front.form.ProfileForm;
 import com.tmg.lesson9.model.user.UserModel;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 @Component
 public class DefaultUserConverterImpl implements UserConverter {
-
-    @Resource
-    ClassChecker defaultClassCheckerImpl;
 
     @Override
     public UserModel convertRegistrationFormToUserModel(RegistrationForm registrationForm) {
@@ -35,10 +29,7 @@ public class DefaultUserConverterImpl implements UserConverter {
         profileForm.setEmail(userModel.getEmail());
         profileForm.setCountry(userModel.getCountry());
         profileForm.setGender(userModel.getGender());
-        if(defaultClassCheckerImpl.isProfileFormFieldsNullOrEmpty(profileForm)){
-            return null;
-        } else {
-            return profileForm;
-        }
+        return profileForm;
     }
+
 }

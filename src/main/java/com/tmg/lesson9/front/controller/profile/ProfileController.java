@@ -1,15 +1,20 @@
 package com.tmg.lesson9.front.controller.profile;
 
+import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.user.UserFacade;
+import com.tmg.lesson9.front.controller.error.ErrorModelViewCreator;
 import com.tmg.lesson9.front.data.SessionUserData;
 import com.tmg.lesson9.front.form.ProfileForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
@@ -34,5 +39,10 @@ public class ProfileController {
             model.addAttribute(errorMessage);
             return "userProfile";
         }
+    }
+
+    @ExceptionHandler(CustomFacadeException.class)
+    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception){
+        return ErrorModelViewCreator.createErrorModelView(exception, "Profile error");
     }
 }

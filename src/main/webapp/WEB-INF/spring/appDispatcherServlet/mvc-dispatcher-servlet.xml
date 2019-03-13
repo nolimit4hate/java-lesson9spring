@@ -12,4 +12,13 @@
         <property name="prefix" value="/WEB-INF/views/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="com.tmg.lesson9.facade.exception.CustomFacadeException">error</prop>
+            </props>
+        </property>
+        <property name="defaultErrorView" value="error/generalErrorPage"></property>
+    </bean>
 </beans>

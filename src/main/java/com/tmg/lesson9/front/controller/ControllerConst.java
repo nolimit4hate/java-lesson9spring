@@ -1,5 +1,5 @@
-package com.tmg.lesson9.front.controller;
-
-public class ControllerConst {
-
-}
+//package com.tmg.lesson9.front.controller;
+//
+//public class ControllerConst {
+//
+//}

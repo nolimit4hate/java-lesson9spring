@@ -1,15 +1,20 @@
 package com.tmg.lesson9.front.controller.message;
 
+import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.message.MessageFacade;
+import com.tmg.lesson9.front.controller.error.ErrorModelViewCreator;
 import com.tmg.lesson9.front.data.SessionUserData;
 import com.tmg.lesson9.front.form.MessageSendForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class MessageSendController {
@@ -34,5 +39,10 @@ public class MessageSendController {
                 return "redirect:/sendMessage";
             }
 
+    }
+
+    @ExceptionHandler(CustomFacadeException.class)
+    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception){
+        return ErrorModelViewCreator.createErrorModelView(exception, "Send message error");
     }
 }

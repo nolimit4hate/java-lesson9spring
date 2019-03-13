@@ -1,12 +1,11 @@
 package com.tmg.lesson9.validator.user.service;
 
-import com.tmg.lesson9.facade.exception.ServiceCustomException;
-import com.tmg.lesson9.front.form.RegistrationForm;
+import com.tmg.lesson9.service.exception.CustomServiceException;
 import com.tmg.lesson9.model.user.UserModel;
 
 public interface UserServiceValidator {
 
-    boolean isUserNameValid(String name) throws ServiceCustomException;
-    boolean isUserPasswordValid(String password) throws ServiceCustomException;
-    boolean isUserModelValid(UserModel userModel) throws ServiceCustomException;
+    boolean isUserNameValid(String name) throws CustomServiceException;
+    boolean isUserPasswordValid(String password) throws CustomServiceException;
+    boolean isUserModelValid(UserModel userModel) throws CustomServiceException;
 }

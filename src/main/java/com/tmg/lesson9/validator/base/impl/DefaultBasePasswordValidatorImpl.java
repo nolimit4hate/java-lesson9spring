@@ -13,7 +13,7 @@ public class DefaultBasePasswordValidatorImpl implements BasePasswordValidator {
             throw new IllegalArgumentException("password cant be null or empty");
         }
         if(StringUtils.containsAny(password, ' ', '/', '!')){
-            return false;
+            throw new IllegalArgumentException("password cant contains symbols \'/\', space, \'!\'");
         } else {
             return true;
         }

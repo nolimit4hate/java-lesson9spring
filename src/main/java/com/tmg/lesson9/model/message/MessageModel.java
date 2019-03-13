@@ -2,7 +2,7 @@ package com.tmg.lesson9.model.message;
 
 public class MessageModel {
 
-    private int id;
+    private int id = 0;
     private String messageTopic;
     private String messageBody;
     private String messageCreator;

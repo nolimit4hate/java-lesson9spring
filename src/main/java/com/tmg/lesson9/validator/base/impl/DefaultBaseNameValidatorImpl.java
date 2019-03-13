@@ -13,7 +13,7 @@ public class DefaultBaseNameValidatorImpl implements BaseNameValidator {
             throw new IllegalArgumentException("name cant be null or empty");
         }
         if(StringUtils.containsAny(userName, ' ', ',', '/', ':')){
-            return false;
+            throw new IllegalArgumentException("name cant contain symbols space, \',\', \'/\', \':\'");
         } else {
             return true;
         }

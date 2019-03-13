@@ -9,6 +9,8 @@ import com.tmg.lesson9.validator.base.impl.DefaultBaseNameValidatorImpl;
 import com.tmg.lesson9.validator.base.impl.DefaultBaseStringFieldValidatorImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
 
@@ -25,11 +27,17 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
             throw new IllegalArgumentException("message model cant be null");
         }
         setMessage(messageModel);
-        if(isIdValid() && isDateTimeValid() && isTopicValid() && isBodyValid() && isCreatorValid()){
-            return true;
-        } else {
-            return false;
-        }
+        isAllParamsValid();
+        return true;
+    }
+
+    private boolean isAllParamsValid() throws IllegalArgumentException {
+        isIdValid();
+        isTopicValid();
+        isBodyValid();
+        isCreatorValid();
+        isDateTimeValid();
+        return true;
     }
 
     @Override
@@ -37,28 +45,31 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
         return baseNameValidator.isUserNameValid(creator);
     }
 
-    private boolean isIdValid(){
+    @Override
+    public boolean isMessageModelListValid(List<MessageModel> messageModelList) throws IllegalArgumentException {
+        if(messageModelList == null){
+            throw new IllegalArgumentException("message model list cant be null");
+        }
+        for(MessageModel messageModel : messageModelList){
+            isMessageModelValid(messageModel);
+        }
+        return true;
+    }
+
+    private boolean isIdValid() throws IllegalArgumentException{
         if(message.getId() >= 0){
             return true;
         } else {
-            return false;
+            throw new IllegalArgumentException("message id must be >= 0");
         }
     }
 
     private boolean isTopicValid() throws IllegalArgumentException {
-        if(baseStringFieldValidator.isStringFieldsValidByLength(5, 63, message.getMessageTopic())){
-            return true;
-        } else {
-            return false;
-        }
+        return baseStringFieldValidator.isStringFieldsValidByLength(5, 63, message.getMessageTopic());
     }
 
     private boolean isBodyValid() throws IllegalArgumentException {
-        if(baseStringFieldValidator.isStringFieldsValidByLength(10, 256, message.getMessageBody())){
-            return true;
-        } else {
-            return false;
-        }
+        return baseStringFieldValidator.isStringFieldsValidByLength(10, 256, message.getMessageBody());
     }
 
     private boolean isCreatorValid() throws IllegalArgumentException {
@@ -67,14 +78,6 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
 
     private boolean isDateTimeValid() throws IllegalArgumentException {
         return baseDateTimeValidator.isDateTimeStringValid(message.getDateTimeCreation());
-    }
-
-    public BaseNameValidator getBaseNameValidator() {
-        return baseNameValidator;
-    }
-
-    public void setBaseNameValidator(BaseNameValidator baseNameValidator) {
-        this.baseNameValidator = baseNameValidator;
     }
 
     public MessageModel getMessage() {
