@@ -9,8 +9,6 @@
 </head>
 <body>
 <div align="center">
-    <%--<p><h1>${fromController}</h1></p>--%>
-    <%--<p><h3>Error info : ${exception.getMessage}</h3></p>--%>
         <p><h1>${fromController}</h1></p>
         <p><h1>${exceptionIs.getMessage()}</h1></p>
     <p><h1></h1></p>
@@ -18,13 +16,13 @@
     <p align="center"><a href='<spring:url value="/home"></spring:url>'>goto Home</a></p>
 
 
-    <c:if test="${not empty userName}">
+    <c:if test="${sessionScope.get()}">
         <p align="center"><a href='<spring:url value="/logout"></spring:url>'>goto Logout</a></p>
         <p align="center"><a href='<spring:url value="/profile/${userName}"></spring:url>'>goto Profile</a></p>
         <p align="center"><a href='<spring:url value="/sendMessage"></spring:url>'>goto SendMessage</a></p>
 
     </c:if>
-    <c:if test="${empty userName}">
+    <c:if test="${null userName}">
         <p align="center"><a href='<spring:url value="/registration"></spring:url>'>goto Registration</a></p>
         <p align="center"><a href='<spring:url value="/login"></spring:url>'>goto Login</a></p>
     </c:if>

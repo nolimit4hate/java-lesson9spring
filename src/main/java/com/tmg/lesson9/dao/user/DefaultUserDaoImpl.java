@@ -3,9 +3,7 @@ package com.tmg.lesson9.dao.user;
 
 import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.model.user.UserModel;
-import com.tmg.lesson9.validator.user.dao.UserDaoValidator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import com.tmg.lesson9.dao.validator.user.UserDaoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,22 +20,19 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.Validate.isTrue;
 
-@Repository
+@Repository("userDao")
 public class DefaultUserDaoImpl implements UserDao {
 
     private NamedParameterJdbcTemplate namedJdbcTemplate;
 
     @Resource
-    UserDaoValidator defaultUserDaoValidatorImpl;
+    UserDaoValidator userDaoValidator;
 
     private final static String USERS_TABLE = "users";
     private final static String USERS_INSERT_PARAMS_SEPARATED_BY_COMMA =
             "user_name, user_email, user_password, user_gender, user_country, creation_date_time";
     private final static String USERS_SELECT_PARAMS_SEPARATED_BY_COMMA =
             "user_id, " + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA;
-
-
-
 
     @Autowired
     public DefaultUserDaoImpl(NamedParameterJdbcTemplate namedJdbcTemplate) {
@@ -46,7 +41,7 @@ public class DefaultUserDaoImpl implements UserDao {
 
     @Override
     public UserModel selectUserByNameFromUsers(String userName) throws CustomDaoException {
-        defaultUserDaoValidatorImpl.isUserNameValid(userName);
+        userDaoValidator.isUserNameValid(userName);
         UserModel userModel;
         String querySelectUserByName =
                 "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
@@ -54,16 +49,20 @@ public class DefaultUserDaoImpl implements UserDao {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("name", userName);
         UserMapper userMapper = new UserMapper();
-        userModel = namedJdbcTemplate.queryForObject(querySelectUserByName, mapSqlParameterSource, userMapper);
-        return userModel;
+        try{
+            userModel = namedJdbcTemplate.queryForObject(querySelectUserByName, mapSqlParameterSource, userMapper);
+            return userModel;
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomDaoException("DAO Error: entering name={" + userName + "} is not found in database ", e);
+        }
     }
 
     @Override
     public boolean selectUserByNamePasswordFromUsers(String userName, String userPassword) throws CustomDaoException {
         isTrue(isNotBlank(userName), "User name is blank");
 
-        defaultUserDaoValidatorImpl.isUserNameValid(userName);
-        defaultUserDaoValidatorImpl.isUserPasswordValid(userPassword);
+        userDaoValidator.isUserNameValid(userName);
+        userDaoValidator.isUserPasswordValid(userPassword);
         UserModel userModel;
         String querySelectUserByNamePass =
                 "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
@@ -74,7 +73,7 @@ public class DefaultUserDaoImpl implements UserDao {
         UserMapper userMapper = new UserMapper();
         try {
             userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
-            defaultUserDaoValidatorImpl.isUserModelValid(userModel);
+            userDaoValidator.isUserModelValid(userModel);
             return true;
         } catch (DataIntegrityViolationException e) {
             throw new CustomDaoException("DAO Error: entering name={" + userName +
@@ -84,9 +83,10 @@ public class DefaultUserDaoImpl implements UserDao {
 
     @Override
     public boolean insertIntoUsers(UserModel user) throws CustomDaoException {
-        defaultUserDaoValidatorImpl.isUserModelValid(user);
+        userDaoValidator.isUserModelValid(user);
         String queryInputUser =
-                "INSERT INTO " + USERS_TABLE + " (" + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA + ") " +
+                "INSERT INTO " + USERS_TABLE +
+                " (" + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA + ") " +
                 " values(:name, :email, :password, :gender, :country, :dateTime);";
         Map<String, String> userParam = getUserParamMap(user);
         try {

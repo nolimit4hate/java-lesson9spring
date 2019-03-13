@@ -4,50 +4,37 @@ import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.dao.user.UserDao;
 import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.service.exception.CustomServiceException;
-import com.tmg.lesson9.validator.user.service.UserServiceValidator;
+import com.tmg.lesson9.service.validator.user.UserServiceValidator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-@Service
+@Service("userService")
 public class DefaultUserServiceImpl implements UserService {
 
     @Resource
-    UserDao defaultUserDaoImpl;
+    UserDao userDao;
     @Resource
-    UserServiceValidator defaultUserServiceValidatorImpl;
+    UserServiceValidator userServiceValidator;
 
     @Override
-    public UserModel getUserModelByName(String userName) throws CustomServiceException {
-        defaultUserServiceValidatorImpl.isUserNameValid(userName);
-        try {
-            UserModel userModel = defaultUserDaoImpl.selectUserByNameFromUsers(userName);
-            defaultUserServiceValidatorImpl.isUserModelValid(userModel);
-            return userModel;
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
-
+    public UserModel getUserModelByName(String userName) throws CustomServiceException, CustomDaoException {
+        userServiceValidator.isUserNameValid(userName);
+        UserModel userModel = userDao.selectUserByNameFromUsers(userName);
+        userServiceValidator.isUserModelValid(userModel);
+        return userModel;
     }
 
     @Override
-    public boolean isUserExistByNamePassword(String userName, String userPassword) throws CustomServiceException {
-        defaultUserServiceValidatorImpl.isUserNameValid(userName);
-        defaultUserServiceValidatorImpl.isUserPasswordValid(userPassword);
-        try{
-            return defaultUserDaoImpl.selectUserByNamePasswordFromUsers(userName, userPassword);
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
+    public boolean isUserExistByNamePassword(String userName, String userPassword) throws CustomServiceException, CustomDaoException {
+        userServiceValidator.isUserNameValid(userName);
+        userServiceValidator.isUserPasswordValid(userPassword);
+        return userDao.selectUserByNamePasswordFromUsers(userName, userPassword);
     }
 
     @Override
-    public boolean addUser(UserModel userModel) throws CustomServiceException {
-        defaultUserServiceValidatorImpl.isUserModelValid(userModel);
-        try{
-            return defaultUserDaoImpl.insertIntoUsers(userModel);
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
+    public boolean addUser(UserModel userModel) throws CustomServiceException, CustomDaoException {
+        userServiceValidator.isUserModelValid(userModel);
+        return userDao.insertIntoUsers(userModel);
     }
 }

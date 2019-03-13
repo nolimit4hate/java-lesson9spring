@@ -6,24 +6,25 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 <context:component-scan base-package="
-com.tmg.lesson9.converter.message com.tmg.lesson9.converter.user
+com.tmg.lesson9.facade.converter.message com.tmg.lesson9.facade.converter.user
 com.tmg.lesson9.dao.user com.tmg.lesson9.dao.message
 com.tmg.lesson9.facade.message com.tmg.lesson9.facade.user
 com.tmg.lesson9.service.user com.tmg.lesson9.service.message
-com.tmg.lesson9.validator.message com.tmg.lesson9.validator.user com.tmg.lesson9.validator.base
-com.tmg.lesson9.validator.base.user com.tmg.lesson9.validator.base.message com.tmg.lesson9.validator.base.impl
-com.tmg.lesson9.validator.message.service com.tmg.lesson9.validator.message.facade com.tmg.lesson9.validator.message.dao
-com.tmg.lesson9.validator.user.service com.tmg.lesson9.validator.user.facade com.tmg.lesson9.validator.user.dao"/>
+com.tmg.lesson9.commons.validator.base
+com.tmg.lesson9.facade.validator.user com.tmg.lesson9.facade.validator.message
+com.tmg.lesson9.service.validator.user com.tmg.lesson9.service.validator.message
+com.tmg.lesson9.dao.validator.user com.tmg.lesson9.dao.validator.message
+"/>
 
     <!-- context placeholder for using properties data-->
     <context:property-placeholder location="classpath:config.db.postgres/postgres.properties" />
 
     <!-- session scoped bean wont work without this -->
-    <bean id="sessionUserData" class="com.tmg.lesson9.front.data.SessionUserData" scope="session">
+    <bean id="sessionUserData" class="com.tmg.lesson9.web.data.SessionUserData" scope="session">
         <aop:scoped-proxy/>
     </bean>
     <!-- added because i did not add it in component scan earlier-->
-    <bean class="com.tmg.lesson9.converter.message.DefaultMessageConverterImpl"
+    <bean class="com.tmg.lesson9.facade.converter.message.DefaultMessageConverterImpl"
           id="defaultMessageConverter">
     </bean>
     <!-- JDBC config.db.postgres -->

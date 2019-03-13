@@ -1,62 +1,51 @@
 package com.tmg.lesson9.facade.message;
 
-import com.tmg.lesson9.converter.message.MessageConverter;
+import com.tmg.lesson9.dao.exception.CustomDaoException;
+import com.tmg.lesson9.facade.converter.message.MessageConverter;
 import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.util.DateTimeGetter;
-import com.tmg.lesson9.front.form.MessageSendForm;
-import com.tmg.lesson9.front.form.MessageShowForm;
+import com.tmg.lesson9.web.form.MessageSendForm;
+import com.tmg.lesson9.web.form.MessageShowForm;
 import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.service.exception.CustomServiceException;
 import com.tmg.lesson9.service.message.MessageService;
-import com.tmg.lesson9.validator.message.facade.MessageFacadeValidator;
+import com.tmg.lesson9.facade.validator.message.MessageFacadeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("messageFacade")
 public class DefaultMessageFacadeImpl implements MessageFacade {
 
     @Autowired
-    private MessageService defaultMessageServiceImpl;
+    private MessageService messageService;
     @Autowired
-    private MessageFacadeValidator defaultMessageFacadeValidatorImpl;
+    private MessageFacadeValidator messageFacadeValidator;
     @Autowired
-    private MessageConverter defaultMessageConverterImpl;
+    private MessageConverter messageConverter;
 
     @Override
-    public List<MessageShowForm> getAllMessagesByCreatorName(String creatorName) throws IllegalArgumentException {
-        defaultMessageFacadeValidatorImpl.isMessageCreatorValid(creatorName);
-        try {
-            List<MessageModel> userMessagesList = defaultMessageServiceImpl.getMessageByCreator(creatorName);
-            defaultMessageFacadeValidatorImpl.isMessageModelListValid(userMessagesList);
-            List<MessageShowForm> showFormList = defaultMessageConverterImpl.convertListModelToListShowForm(userMessagesList);
-            return showFormList;
-        } catch (CustomServiceException e) {
-            throw new CustomFacadeException(e.getMessage(), e);
-        }
+    public List<MessageShowForm> getAllMessagesByCreatorName(String creatorName) throws CustomFacadeException, CustomServiceException, CustomDaoException {
+        messageFacadeValidator.isMessageCreatorValid(creatorName);
+        List<MessageModel> userMessagesList = messageService.getMessageByCreator(creatorName);
+        messageFacadeValidator.isMessageModelListValid(userMessagesList);
+        List<MessageShowForm> showFormList = messageConverter.convertListModelToListShowForm(userMessagesList);
+        return showFormList;
     }
 
     @Override
-    public boolean addMessage(MessageSendForm messageSendForm) throws IllegalArgumentException {
-        defaultMessageFacadeValidatorImpl.isMessageSendFormValid(messageSendForm);
-        MessageModel messageModel = defaultMessageConverterImpl.convertSendFormToModel(messageSendForm);
+    public boolean addMessage(MessageSendForm messageSendForm) throws CustomFacadeException, CustomServiceException, CustomDaoException {
+        messageFacadeValidator.isMessageSendFormValid(messageSendForm);
+        MessageModel messageModel = messageConverter.convertSendFormToModel(messageSendForm);
         messageModel.setDateTimeCreation(DateTimeGetter.getCurrentDateTime());
-        try {
-            return defaultMessageServiceImpl.addMessage(messageModel);
-        } catch (CustomServiceException e) {
-            throw new CustomFacadeException(e.getMessage(), e);
-        }
+        return messageService.addMessage(messageModel);
     }
 
     @Override
-    public List<MessageShowForm> getAllMessages() throws IllegalArgumentException {
-        try {
-            List<MessageModel> messageModelList = defaultMessageServiceImpl.getAllMessages();
-            defaultMessageFacadeValidatorImpl.isMessageModelListValid(messageModelList);
-            return defaultMessageConverterImpl.convertListModelToListShowForm(messageModelList);
-        } catch (CustomServiceException e) {
-            throw new CustomFacadeException(e.getMessage(), e);
-        }
+    public List<MessageShowForm> getAllMessages() throws CustomFacadeException, CustomServiceException, CustomDaoException {
+        List<MessageModel> messageModelList = messageService.getAllMessages();
+        messageFacadeValidator.isMessageModelListValid(messageModelList);
+        return messageConverter.convertListModelToListShowForm(messageModelList);
     }
 }
