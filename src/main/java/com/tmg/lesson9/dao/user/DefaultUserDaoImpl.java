@@ -1,6 +1,5 @@
 package com.tmg.lesson9.dao.user;
 
-
 import com.tmg.lesson9.dao.exception.CustomDaoException;
 import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.dao.validator.user.UserDaoValidator;
@@ -17,16 +16,13 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.Validate.isTrue;
+/**
+ *  Default implementation of UserDao interface. Class make query and send request with query to database then take
+ * response from database and process it. After processing send output processing data or throw CustomDaoException.
+ */
 
 @Repository("userDao")
 public class DefaultUserDaoImpl implements UserDao {
-
-    private NamedParameterJdbcTemplate namedJdbcTemplate;
-
-    @Resource
-    UserDaoValidator userDaoValidator;
 
     private final static String USERS_TABLE = "users";
     private final static String USERS_INSERT_PARAMS_SEPARATED_BY_COMMA =
@@ -34,10 +30,46 @@ public class DefaultUserDaoImpl implements UserDao {
     private final static String USERS_SELECT_PARAMS_SEPARATED_BY_COMMA =
             "user_id, " + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA;
 
+    /**
+     *   NamedParameterJdbcTemplate class with a basic set of JDBC operations, allowing the use of
+     *  named parameters rather than traditional '?' placeholders.
+     *
+     * @param namedJdbcTemplate  object of NamedParameterJdbcTemplate
+     */
+
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
+
+    /**
+     *  injection default realisation of MessageDaoValidator interface
+     *
+     * @param userDaoValidator validator for checking input parameters
+     */
+
+    @Resource
+    UserDaoValidator userDaoValidator;
+
+    /**
+     * init NamedParameterJdbcTemplate using constructor injection
+     *
+     * @param namedJdbcTemplate
+     */
+
     @Autowired
     public DefaultUserDaoImpl(NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.namedJdbcTemplate = namedJdbcTemplate;
     }
+
+    /**
+     *      Check input @param userName for valid. If it is invalid then throw CustomDaoException
+     * Make 'select user by userName' query. Create object of MessageMapper for getting right filled result.
+     * Create MapSqlParameterSource object for right query work. Send request to database using NamedJdbcTemplate with query.
+     * and MessageMapper and MapSqlParameterSource. Return filled UserName object.
+     *      If SQLException will be thrown wrap it with CustomDaoException with explain message and rethrow.
+     *
+     * @param userName string with user name value
+     * @return filled UserModel object. it is a result of processing database response
+     * @throws CustomDaoException if @param userName is invalid or if SQLException will be
+     */
 
     @Override
     public UserModel selectUserByNameFromUsers(String userName) throws CustomDaoException {
@@ -57,13 +89,25 @@ public class DefaultUserDaoImpl implements UserDao {
         }
     }
 
+    /**
+     *      Check input @param userName and @param userPassword for valid. If they are invalid then throw CustomDaoException
+     * Make 'select user by userName and userPassword' query. Create object of MessageMapper for getting right filled result.
+     * Create MapSqlParameterSource object for right query work. Send request to database using NamedJdbcTemplate with query.
+     * and MessageMapper and MapSqlParameterSource. Check getting UserModel object for valid. If UserModel object is valid
+     * then return true else throw CustomDaoException with explain message.
+     *      If SQLException will be thrown wrap it with CustomDaoException with explain message and rethrow.
+     *
+     * @param userPassword string with user password value
+     * @return true if all operations in this method were successful. Exactly if user with input user name and password
+     * exists in database.
+     * @throws CustomDaoException if @param userName or @param userPassword is invalid or if getting UserModel result from
+     * NamedJdbcTemplate is invalid or if SQLException will be thrown
+     */
+
     @Override
     public boolean selectUserByNamePasswordFromUsers(String userName, String userPassword) throws CustomDaoException {
-        isTrue(isNotBlank(userName), "User name is blank");
-
         userDaoValidator.isUserNameValid(userName);
         userDaoValidator.isUserPasswordValid(userPassword);
-        UserModel userModel;
         String querySelectUserByNamePass =
                 "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
                 " FROM " + USERS_TABLE + " WHERE user_name= :name AND user_password= :password";
@@ -72,7 +116,7 @@ public class DefaultUserDaoImpl implements UserDao {
         mapSqlParameterSource.addValue("password", userPassword);
         UserMapper userMapper = new UserMapper();
         try {
-            userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
+            UserModel userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
             userDaoValidator.isUserModelValid(userModel);
             return true;
         } catch (DataIntegrityViolationException e) {
@@ -80,6 +124,18 @@ public class DefaultUserDaoImpl implements UserDao {
                     "} and password={" + userPassword + "} ", e);
         }
     }
+
+    /**
+     *      Check for input @param user for valid. If it is invalid then throw CustomDaoException.
+     *      Make 'insert user into users table' query. Create object of MessageMapper for getting right filled result.
+     *  Create map(key=String, value=String) for mapping values that we will send to NamedJdbcTemplate for correctly working
+     *  query. Send request to database using NamedJdbcTemplate with query and mapping parameters
+     *      If SQLException will be thrown wrap it with CustomDaoException with explain message and rethrow.
+     *
+     * @param user UserModel object with information about user that will be added to database
+     * @return true if all operations in this method were successful. Exactly if user data in @param user will be added to database
+     * @throws CustomDaoException if @param user is invalid or if SQLException will be thrown
+     */
 
     @Override
     public boolean insertIntoUsers(UserModel user) throws CustomDaoException {
@@ -98,6 +154,13 @@ public class DefaultUserDaoImpl implements UserDao {
         }
     }
 
+    /**
+     * Method create map of mapping string params to UserModel fields for use in input NamedJdbcTemplate
+     *
+     * @param user UserModel object with information about user
+     * @return map of mapping string params to UserModel fields for use in input NamedJdbcTemplate
+     */
+
     private Map<String, String> getUserParamMap(UserModel user){
         Map<String, String> userParam = new HashMap();
         userParam.put("name", user.getUserName());
@@ -109,7 +172,23 @@ public class DefaultUserDaoImpl implements UserDao {
         return userParam;
     }
 
+    /**
+     *      Nested class of DefaultUserDaoImpl. Class must implements RowMapper for getting right output
+     * MessageModel object from database response.
+     *
+     */
+
     private static final class UserMapper implements RowMapper<UserModel> {
+
+        /**
+         *      Method create filled UserModel object from ResultSet
+         *
+         * @param resultSet object for getting result from database response
+         * @param rowNumber number of row with data from which UserModel will be filled
+         * @return filled MessageModel with information from database
+         * @throws SQLException anytime during database operations
+         */
+
         public UserModel mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
             UserModel result = new UserModel();
             result.setId(resultSet.getInt("user_id"));

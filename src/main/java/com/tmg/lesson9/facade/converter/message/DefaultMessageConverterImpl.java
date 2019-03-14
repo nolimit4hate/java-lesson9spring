@@ -8,6 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *      Implementation of MessageConverter. Class have convert methods that convert:
+ *  from MessageSendForm to MessageModel;
+ *  from MessageModel to MessageShowForm;
+ *  from list of MessageModel to list of MessageShowForm.
+ */
+
 @Component("messageConverter")
 public class DefaultMessageConverterImpl implements MessageConverter {
 

@@ -8,18 +8,47 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ *      Class implements UserDaoValidator - specific validator for dao layer
+ *
+ */
+
 @Component("userDaoValidator")
 public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
+
+    /**
+     *  Inject BaseMessageValidator implementation
+     */
 
     @Resource
     BaseUserValidator baseUserValidator;
     @Resource
     BaseStringFieldValidator baseStringFieldValidator;
 
+    /**
+     *  Use implementation of BaseUserValidator and do specific user name validation for dao layer
+     *
+     * @param name input string with user name
+     * @return true if input string is valid
+     * @throws CustomDaoException if IllegalArgumentException will be thrown
+     */
+
     @Override
     public boolean isUserNameValid(String name) throws CustomDaoException {
+        try {
             return baseUserValidator.isUserNameValid(name);
+        } catch (IllegalArgumentException e) {
+            throw new CustomDaoException(e.getMessage(), e);
+        }
     }
+
+    /**
+     * Use implementation of BaseUserValidator and do specific user password validation for dao layer
+     *
+     * @param password input string value with user password information
+     * @return true if input string is valid
+     * @throws CustomDaoException if IllegalArgumentException will be thrown
+     */
 
     @Override
     public boolean isUserPasswordValid(String password) throws CustomDaoException {
@@ -29,6 +58,14 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
             throw new CustomDaoException(e.getMessage(), e);
         }
     }
+
+    /**
+     *  Use implementation of BaseUserValidator and do specific UserModel validation for dao layer.
+     *
+     * @param userModel UserModel object with information about user
+     * @return true if input UserModel is valid
+     * @throws CustomDaoException if input UserModel is invalid or if IllegalArgumentException will be thrown
+     */
 
     @Override
     public boolean isUserModelValid(UserModel userModel) throws CustomDaoException {

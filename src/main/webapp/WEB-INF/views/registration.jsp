@@ -26,17 +26,14 @@
             <tr>
                 <td><form:label path="name">Nickname</form:label></td>
                 <td><form:input path="name" id="nickname" /></td>
-                <td><form:errors path="name" cssClass="error" /></td>
             </tr>
             <tr>
                 <td><form:label path="email">Email</form:label></td>
                 <td><form:input path="email" id="email" /></td>
-                <td><form:errors path="email" cssClass="error"/></td>
             </tr>
             <tr>
                 <td><form:label path="password">Password</form:label></td>
                 <td><form:password path="password" id="password" /></td>
-                <td><form:errors path="password" cssClass="error"/></td>
             </tr>
             <tr>
                 <td>Gender</td>
@@ -55,6 +52,21 @@
             </tr>
             <tr>
                 <td align="right"><input type="submit" value="Submit"></td>
+            </tr>
+            <tr>
+                <td>--------------</td>
+            </tr>
+            <tr>
+                <td><form:errors path="name" cssClass="error" /></td>
+            </tr>
+            <tr>
+                <td><form:errors path="email" cssClass="error"/></td>
+            </tr>
+            <tr>
+                <td><form:errors path="password" cssClass="error"/></td>
+            </tr>
+            <tr>
+                <td>--------------</td>
             </tr>
         </table>
 

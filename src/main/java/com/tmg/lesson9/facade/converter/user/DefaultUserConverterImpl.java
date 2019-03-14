@@ -5,6 +5,12 @@ import com.tmg.lesson9.web.form.ProfileForm;
 import com.tmg.lesson9.model.user.UserModel;
 import org.springframework.stereotype.Component;
 
+/**
+ *      Implementation of UserConverter. Class have convert methods that convert:
+ *  from RegistrationForm to UserModel;
+ *  from UserModel to ProfileForm;
+ */
+
 @Component("userConverter")
 public class DefaultUserConverterImpl implements UserConverter {
 

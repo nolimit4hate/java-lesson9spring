@@ -8,6 +8,7 @@ import com.tmg.lesson9.web.controller.error.ErrorModelViewCreator;
 import com.tmg.lesson9.web.form.RegistrationForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +48,12 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute RegistrationForm user, Model model) {
-        userFacade.addUser(user);
-        String successMessage = "user " + user.getName() + " was registered !";
+    public String addUser(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            return "registration";
+        }
+        userFacade.addUser(registrationForm);
+        String successMessage = "user " + registrationForm.getName() + " was registered !";
         model.addAttribute("successMessage", successMessage);
         return "successPage";
     }

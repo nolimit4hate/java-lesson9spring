@@ -7,11 +7,27 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ *      Class implements MessageDaoValidator - specific validator for dao layer
+ */
+
 @Component("messageDaoValidator")
 public class DefaultMessageDaoValidatorImpl implements MessageDaoValidator {
 
+    /**
+     *  Inject BaseMessageValidator implementation
+     */
+
     @Resource
     BaseMessageValidator baseMessageValidator;
+
+    /**
+     *  Use implementation of BaseMessageValidator and do specific message creator validation for dao layer
+     *
+     * @param creator input string value with name of message creator
+     * @return true if input string is valid
+     * @throws CustomDaoException if IllegalArgumentException will be thrown
+     */
 
     @Override
     public boolean isMessageCreatorValid(String creator) throws CustomDaoException {
@@ -21,6 +37,14 @@ public class DefaultMessageDaoValidatorImpl implements MessageDaoValidator {
             throw new CustomDaoException(e.getMessage(), e);
         }
     }
+
+    /**
+     *  Use implementation of BaseMessageValidator and do specific MessageModel validation for dao layer
+     *
+     * @param messageModel MessageModel type object with information about message
+     * @return true if input value is valid
+     * @throws CustomDaoException if IllegalArgumentException will be thrown
+     */
 
     @Override
     public boolean isMessageModelValid(MessageModel messageModel) throws CustomDaoException {
