@@ -1,5 +1,7 @@
 package com.tmg.lesson9.model.message;
 
+import java.util.Objects;
+
 public class MessageModel {
 
     private int id = 0;
@@ -57,5 +59,22 @@ public class MessageModel {
                 ", messageCreator='" + messageCreator + '\'' +
                 ", dateTimeCreation='" + dateTimeCreation + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageModel that = (MessageModel) o;
+        return getId() == that.getId() &&
+                getMessageTopic().equals(that.getMessageTopic()) &&
+                getMessageBody().equals(that.getMessageBody()) &&
+                getMessageCreator().equals(that.getMessageCreator()) &&
+                getDateTimeCreation().equals(that.getDateTimeCreation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getMessageTopic(), getMessageBody(), getMessageCreator(), getDateTimeCreation());
     }
 }

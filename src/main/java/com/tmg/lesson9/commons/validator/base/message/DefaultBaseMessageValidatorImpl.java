@@ -1,19 +1,19 @@
 package com.tmg.lesson9.commons.validator.base.message;
 
-import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.commons.validator.base.BaseDateTimeValidator;
 import com.tmg.lesson9.commons.validator.base.BaseNameValidator;
 import com.tmg.lesson9.commons.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseDateTimeValidatorImpl;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseNameValidatorImpl;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseStringFieldValidatorImpl;
+import com.tmg.lesson9.model.message.MessageModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- *      default implementation of base MessageModel validator interface. This base message validator implementation was created
- *  to help realize same specific class for each web program layer(facade, service, dao)
+ * default implementation of base MessageModel validator interface. This base message validator implementation was created
+ * to help realize same specific class for each web program layer(facade, service, dao)
  */
 
 @Component("baseMessageValidator")
@@ -39,7 +39,7 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
     MessageModel message = new MessageModel();
 
     /**
-     *  method check MessageModel type value for valid. every field of input object is checking for valid
+     * method check MessageModel type value for valid. every field of input object is checking for valid
      *
      * @param messageModel is value of MessageModel
      * @return true if input value is valid
@@ -48,7 +48,7 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
 
     @Override
     public boolean isMessageModelValid(MessageModel messageModel) throws IllegalArgumentException {
-        if(messageModel == null){
+        if (messageModel == null) {
             throw new IllegalArgumentException("message model cant be null");
         }
         setMessage(messageModel);
@@ -95,10 +95,10 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
 
     @Override
     public boolean isMessageModelListValid(List<MessageModel> messageModelList) throws IllegalArgumentException {
-        if(messageModelList == null){
+        if (messageModelList == null) {
             throw new IllegalArgumentException("message model list cant be null");
         }
-        for(MessageModel messageModel : messageModelList){
+        for (MessageModel messageModel : messageModelList) {
             isMessageModelValid(messageModel);
         }
         return true;
@@ -111,8 +111,8 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
      * @throws IllegalArgumentException if messageId is negative
      */
 
-    private boolean isIdValid() throws IllegalArgumentException{
-        if(message.getId() >= 0){
+    private boolean isIdValid() throws IllegalArgumentException {
+        if (message.getId() >= 0) {
             return true;
         } else {
             throw new IllegalArgumentException("message id must be >= 0");

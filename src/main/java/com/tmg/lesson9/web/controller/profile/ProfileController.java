@@ -27,12 +27,12 @@ public class ProfileController {
     private SessionUserData sessionUserData;
 
     @RequestMapping(value = "/profile/{profileName:.+}", method = RequestMethod.GET)
-    public String showUser (@PathVariable String profileName, Model model){
+    public String showUser(@PathVariable String profileName, Model model) {
         ProfileForm profileForm = userFacade.getProfile(profileName);
-        if(profileForm != null){
+        if (profileForm != null) {
             model.addAttribute(profileForm);
-            if(sessionUserData != null && sessionUserData.getUserName() != null &&
-                    sessionUserData.getUserName().equals(profileName)){
+            if (sessionUserData != null && sessionUserData.getUserName() != null &&
+                    sessionUserData.getUserName().equals(profileName)) {
                 model.addAttribute("showEmail", "yes");
             }
             return "userProfile";
@@ -44,7 +44,7 @@ public class ProfileController {
     }
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
-    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception){
+    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception) {
         return ErrorModelViewCreator.createErrorModelView(exception, "Profile error");
     }
 }

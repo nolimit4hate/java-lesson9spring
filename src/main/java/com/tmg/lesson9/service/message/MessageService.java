@@ -9,6 +9,8 @@ import java.util.List;
 public interface MessageService {
 
     List<MessageModel> getAllMessages() throws CustomServiceException, CustomDaoException;
+
     List<MessageModel> getMessageByCreator(String creatorName) throws CustomServiceException, CustomDaoException;
+
     boolean addMessage(MessageModel messageModel) throws CustomServiceException, CustomDaoException;
 }

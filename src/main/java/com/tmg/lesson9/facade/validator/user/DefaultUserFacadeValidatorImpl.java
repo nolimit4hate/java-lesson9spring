@@ -1,13 +1,17 @@
 package com.tmg.lesson9.facade.validator.user;
 
-import com.tmg.lesson9.facade.exception.CustomFacadeException;
-import com.tmg.lesson9.web.form.RegistrationForm;
-import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.commons.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.commons.validator.base.user.BaseUserValidator;
+import com.tmg.lesson9.facade.exception.CustomFacadeException;
+import com.tmg.lesson9.model.user.UserModel;
+import com.tmg.lesson9.web.form.RegistrationForm;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
+/**
+ * Class implements UserFacadeValidator - specific validator for facade layer
+ */
 
 @Component("userFacadeValidator")
 public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
@@ -16,6 +20,14 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
     BaseUserValidator baseUserValidator;
     @Resource
     BaseStringFieldValidator baseStringFieldValidator;
+
+    /**
+     * Method valid input string for user name format
+     *
+     * @param name string value that contain user name information
+     * @return true if @param name is valid
+     * @throws CustomFacadeException if input @param name is invalid
+     */
 
     @Override
     public boolean isUserNameValid(String name) throws CustomFacadeException {
@@ -26,6 +38,14 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
         }
     }
 
+    /**
+     * Method valid input string for user password format
+     *
+     * @param password string value that contain user password information
+     * @return true if @param name is valid
+     * @throws CustomFacadeException if input @param name is invalid
+     */
+
     @Override
     public boolean isUserPasswordValid(String password) throws CustomFacadeException {
         try {
@@ -35,13 +55,30 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
         }
     }
 
+    /**
+     * Method valid input RegistrationForm object. Call isRegistrationFormAllParamsValid() method for validate all
+     * fields of input RegistrationForm object.
+     *
+     * @param registrationForm RegistrationForm object that contain information about user
+     * @return true if RegistrationForm object is valid
+     * @throws CustomFacadeException if RegistrationForm object is invalid or null
+     */
+
     @Override
     public boolean isRegistrationFormValid(RegistrationForm registrationForm) throws CustomFacadeException {
-        if(registrationForm == null){
+        if (registrationForm == null) {
             throw new CustomFacadeException("registration form cant be null");
         }
         return isRegistrationFormAllParamsValid(registrationForm);
     }
+
+    /**
+     * Validate all parameters of RegistrationForm object using baseStringFieldValidator
+     *
+     * @param registrationForm RegistrationForm object that contain information about user
+     * @return true if all fields of RegistrationForm object are valid
+     * @throws CustomFacadeException if any field of RegistrationForm object is invalid
+     */
 
     private boolean isRegistrationFormAllParamsValid(RegistrationForm registrationForm) throws CustomFacadeException {
         try {
@@ -51,10 +88,18 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
             baseStringFieldValidator.isStringFieldValid(registrationForm.getCountry());
             baseStringFieldValidator.isStringFieldValid(registrationForm.getGender());
             return true;
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new CustomFacadeException(e.getMessage(), e);
         }
     }
+
+    /**
+     * Use implementation of BaseUserValidator and do specific UserModel validation for facade layer.
+     *
+     * @param userModel UserModel object with information about user
+     * @return true if input UserModel is valid
+     * @throws CustomFacadeException if input UserModel is invalid or if IllegalArgumentException will be thrown
+     */
 
     @Override
     public boolean isUserModelValid(UserModel userModel) throws CustomFacadeException {

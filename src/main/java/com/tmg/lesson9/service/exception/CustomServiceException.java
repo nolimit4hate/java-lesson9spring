@@ -1,5 +1,9 @@
 package com.tmg.lesson9.service.exception;
 
+/**
+ * custom specific exception for facade layer
+ */
+
 public class CustomServiceException extends RuntimeException {
 
     private String message;

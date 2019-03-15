@@ -1,23 +1,22 @@
 package com.tmg.lesson9.dao.validator.user;
 
-import com.tmg.lesson9.dao.exception.CustomDaoException;
-import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.commons.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.commons.validator.base.user.BaseUserValidator;
+import com.tmg.lesson9.dao.exception.CustomDaoException;
+import com.tmg.lesson9.model.user.UserModel;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
- *      Class implements UserDaoValidator - specific validator for dao layer
- *
+ * Class implements UserDaoValidator - specific validator for dao layer
  */
 
 @Component("userDaoValidator")
 public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
 
     /**
-     *  Inject BaseMessageValidator implementation
+     * Inject BaseMessageValidator implementation
      */
 
     @Resource
@@ -26,7 +25,7 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     BaseStringFieldValidator baseStringFieldValidator;
 
     /**
-     *  Use implementation of BaseUserValidator and do specific user name validation for dao layer
+     * Use implementation of BaseUserValidator and do specific user name validation for dao layer
      *
      * @param name input string with user name
      * @return true if input string is valid
@@ -60,21 +59,21 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     }
 
     /**
-     *  Use implementation of BaseUserValidator and do specific UserModel validation for dao layer.
+     * Use implementation of BaseUserValidator and do specific UserModel validation for dao layer.
      *
      * @param userModel UserModel object with information about user
-     * @return true if input UserModel is valid
+     * @return true if all fields of UserModel object are valid
      * @throws CustomDaoException if input UserModel is invalid or if IllegalArgumentException will be thrown
      */
 
     @Override
     public boolean isUserModelValid(UserModel userModel) throws CustomDaoException {
-        try{
+        try {
             if (baseUserValidator.isUserModelValid(userModel) &&
                     baseStringFieldValidator.isStringFieldsValidByLength(0, 40, userModel.getUserName()) &&
                     baseStringFieldValidator.isStringFieldsValidByLength(0, 40, userModel.getEmail()) &&
                     baseStringFieldValidator.isStringFieldsValidByLength(0, 40, userModel.getPassword()) &&
-                    baseStringFieldValidator.isStringFieldsValidByLength(0, 25, userModel.getCountry()) ) {
+                    baseStringFieldValidator.isStringFieldsValidByLength(0, 25, userModel.getCountry())) {
 
                 return true;
             } else {
@@ -85,8 +84,6 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
             throw new CustomDaoException(e.getMessage(), e);
         }
     }
-
-
 
 
 }

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- *  default implementation of base password validator interface.
+ * default implementation of base password validator interface.
  */
 
 @Component("basePasswordValidator")
@@ -20,11 +20,11 @@ public class DefaultBasePasswordValidatorImpl implements BasePasswordValidator {
      */
 
     @Override
-    public boolean isPasswordValid(String password) throws IllegalArgumentException{
-        if(password == null || password.isEmpty()){
+    public boolean isPasswordValid(String password) throws IllegalArgumentException {
+        if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("password cant be null or empty");
         }
-        if(StringUtils.containsAny(password, ' ', '/', ',')){
+        if (StringUtils.containsAny(password, ' ', '/', ',')) {
             throw new IllegalArgumentException("password cant contains symbols \'/\', \'space\', \'comma\'");
         } else {
             return true;

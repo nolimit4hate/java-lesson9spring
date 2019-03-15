@@ -8,6 +8,8 @@ import java.util.List;
 public interface MessageDao {
 
     List<MessageModel> getAllMessages() throws CustomDaoException;
+
     List<MessageModel> getMessagesByCreator(String creatorName) throws CustomDaoException;
+
     boolean insertIntoMessages(MessageModel messageModel) throws CustomDaoException;
 }

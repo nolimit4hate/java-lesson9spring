@@ -15,9 +15,9 @@ public class HomeController {
     private SessionUserData sessionUserData;
 
     @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-    public String goHome(Model model){
-        if(sessionUserData != null && sessionUserData.getUserName() != null)
-        model.addAttribute("userName", sessionUserData.getUserName());
+    public String goHome(Model model) {
+        if (sessionUserData != null && sessionUserData.getUserName() != null)
+            model.addAttribute("userName", sessionUserData.getUserName());
         model.addAttribute("userIp", sessionUserData.getUserIP());
         return "home";
     }

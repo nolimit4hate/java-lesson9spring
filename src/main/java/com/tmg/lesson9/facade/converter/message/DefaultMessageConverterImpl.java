@@ -1,18 +1,18 @@
 package com.tmg.lesson9.facade.converter.message;
 
+import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.web.form.MessageSendForm;
 import com.tmg.lesson9.web.form.MessageShowForm;
-import com.tmg.lesson9.model.message.MessageModel;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *      Implementation of MessageConverter. Class have convert methods that convert:
- *  from MessageSendForm to MessageModel;
- *  from MessageModel to MessageShowForm;
- *  from list of MessageModel to list of MessageShowForm.
+ * Implementation of MessageConverter. Class have convert methods that convert:
+ * from MessageSendForm to MessageModel;
+ * from MessageModel to MessageShowForm;
+ * from list of MessageModel to list of MessageShowForm.
  */
 
 @Component("messageConverter")
@@ -22,7 +22,7 @@ public class DefaultMessageConverterImpl implements MessageConverter {
     public List<MessageShowForm> convertListModelToListShowForm(List<MessageModel> messageModels) {
         List<MessageShowForm> showFormList = new ArrayList();
         MessageShowForm showForm;
-        for(MessageModel messageModel : messageModels){
+        for (MessageModel messageModel : messageModels) {
             showForm = convertModelToShowForm(messageModel);
             showFormList.add(showForm);
         }

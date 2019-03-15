@@ -1,7 +1,7 @@
 package com.tmg.lesson9.dao.exception;
 
 /**
- *  custom specific exception for dao layer
+ * custom specific exception for dao layer
  */
 
 public class CustomDaoException extends RuntimeException {

@@ -10,12 +10,12 @@ import java.util.Calendar;
 public class DateTimeGetter {
 
     /**
-     *  Return string with current date-time information
+     * Return string with current date-time information
      *
      * @return string with current date-time information in form (yyy-MM-dd HH:mm:ss)
      */
 
-    public static String getCurrentDateTime(){
+    public static String getCurrentDateTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
     }
 }

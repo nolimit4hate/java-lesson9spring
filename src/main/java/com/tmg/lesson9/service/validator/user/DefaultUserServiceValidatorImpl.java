@@ -1,8 +1,8 @@
 package com.tmg.lesson9.service.validator.user;
 
-import com.tmg.lesson9.service.exception.CustomServiceException;
-import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.commons.validator.base.user.BaseUserValidator;
+import com.tmg.lesson9.model.user.UserModel;
+import com.tmg.lesson9.service.exception.CustomServiceException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,7 +15,7 @@ public class DefaultUserServiceValidatorImpl implements UserServiceValidator {
 
     @Override
     public boolean isUserNameValid(String name) throws CustomServiceException {
-        try{
+        try {
             return baseUserValidator.isUserNameValid(name);
         } catch (IllegalArgumentException e) {
             throw new CustomServiceException(e.getMessage(), e);
@@ -33,7 +33,7 @@ public class DefaultUserServiceValidatorImpl implements UserServiceValidator {
 
     @Override
     public boolean isUserModelValid(UserModel userModel) throws CustomServiceException {
-        try{
+        try {
             return baseUserValidator.isUserModelValid(userModel);
         } catch (IllegalArgumentException e) {
             throw new CustomServiceException(e.getMessage(), e);

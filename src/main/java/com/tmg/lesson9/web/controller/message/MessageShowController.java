@@ -24,10 +24,10 @@ public class MessageShowController {
     private MessageFacade messageFacade;
 
     @GetMapping(value = "/profile/{profileName:.+}/messages")
-    public String showUserMessage(@PathVariable String profileName, Model model){
+    public String showUserMessage(@PathVariable String profileName, Model model) {
         List<MessageShowForm> messageShowFormList = messageFacade.getAllMessagesByCreatorName(profileName);
         model.addAttribute("showUser", profileName);
-        if(messageShowFormList == null || messageShowFormList.isEmpty()){
+        if (messageShowFormList == null || messageShowFormList.isEmpty()) {
             model.addAttribute("noMessages", "No messages");
         } else {
             model.addAttribute(messageShowFormList);
@@ -36,7 +36,7 @@ public class MessageShowController {
     }
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
-    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception){
+    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception) {
         return ErrorModelViewCreator.createErrorModelView(exception, "Show message error");
     }
 }

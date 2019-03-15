@@ -29,6 +29,7 @@ public class LoginController {
     private SessionUserData sessionUserData;
     // servlet request
     private HttpServletRequest request;
+
     // get autowired servlet request
     @Resource
     public void setRequest(HttpServletRequest request) {
@@ -36,18 +37,18 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model){
+    public String login(Model model) {
         model.addAttribute(new LoginForm());
         return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+    public String login(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             return "login";
         }
         request.getRemoteAddr();
-        if(userFacade.doLogin(loginForm)){
+        if (userFacade.doLogin(loginForm)) {
 //            add session data - user name and ip
             sessionUserData.setUserName(loginForm.getName());
             sessionUserData.setUserIP(request.getRemoteAddr());
@@ -60,7 +61,7 @@ public class LoginController {
     }
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
-    public ModelAndView handleFacadeException(HttpServletRequest request, RuntimeException exception){
+    public ModelAndView handleFacadeException(HttpServletRequest request, RuntimeException exception) {
         return ErrorModelViewCreator.createErrorModelView(exception, "Login error");
     }
 }

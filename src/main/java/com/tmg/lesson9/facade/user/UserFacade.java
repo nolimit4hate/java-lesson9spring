@@ -10,6 +10,8 @@ import com.tmg.lesson9.web.form.RegistrationForm;
 public interface UserFacade {
 
     boolean addUser(RegistrationForm user) throws CustomFacadeException, CustomServiceException, CustomDaoException;
-    boolean doLogin(LoginForm userLogin) throws CustomFacadeException, CustomServiceException, CustomDaoException ;
-    ProfileForm getProfile(String userName) throws CustomFacadeException, CustomServiceException, CustomDaoException ;
+
+    boolean doLogin(LoginForm userLogin) throws CustomFacadeException, CustomServiceException, CustomDaoException;
+
+    ProfileForm getProfile(String userName) throws CustomFacadeException, CustomServiceException, CustomDaoException;
 }

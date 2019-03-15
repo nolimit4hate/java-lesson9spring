@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  {@code RegisterUserController} class is controller that process all requests with url that ends
+ * {@code RegisterUserController} class is controller that process all requests with url that ends
  * with context path + "/registration" with methods get and post.
- *  If request method is get add to user attribute object {@code RegistrationForm} and do
+ * If request method is get add to user attribute object {@code RegistrationForm} and do
  * follow to registration page(registration.jsp).
- *  If request method is post we pass our filled object {@code RegistrationForm} to facade layer with
+ * If request method is post we pass our filled object {@code RegistrationForm} to facade layer with
  * method addUser. If method addUser return true do redirect to login page else do forward to registration
  * page with error massage about wrong input data.
  */
@@ -35,7 +35,7 @@ import java.util.List;
 public class RegistrationController {
 
     /**
-     *  @param facadeUser represent facade layer for user
+     * @param facadeUser represent facade layer for user
      */
 
     @Resource
@@ -49,7 +49,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String addUser(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm, BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "registration";
         }
         userFacade.addUser(registrationForm);
@@ -59,17 +59,17 @@ public class RegistrationController {
     }
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
-    public ModelAndView handleCustomFacadeException(HttpServletRequest request, Exception exception){
+    public ModelAndView handleCustomFacadeException(HttpServletRequest request, Exception exception) {
         return ErrorModelViewCreator.createErrorModelView(exception, "Registration error");
     }
 
     /**
-     *  Method generate list of countries which will be showed in dropdown countries menu
+     * Method generate list of countries which will be showed in dropdown countries menu
      *
      * @return list of countries
      */
     @ModelAttribute("countryList")
-    public List<String> getCountryList(){
+    public List<String> getCountryList() {
         List<String> exerciseList = new ArrayList<>();
         exerciseList.add("Ukraine");
         exerciseList.add("USA");

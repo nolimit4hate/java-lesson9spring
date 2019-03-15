@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface MessageFacade {
     List<MessageShowForm> getAllMessagesByCreatorName(String creatorName) throws CustomFacadeException, CustomServiceException, CustomDaoException;
+
     boolean addMessage(MessageSendForm messageSendForm) throws CustomFacadeException, CustomServiceException, CustomDaoException;
+
     List<MessageShowForm> getAllMessages() throws CustomFacadeException, CustomServiceException, CustomDaoException;
 }

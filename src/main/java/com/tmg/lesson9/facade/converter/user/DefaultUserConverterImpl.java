@@ -1,14 +1,14 @@
 package com.tmg.lesson9.facade.converter.user;
 
-import com.tmg.lesson9.web.form.RegistrationForm;
-import com.tmg.lesson9.web.form.ProfileForm;
 import com.tmg.lesson9.model.user.UserModel;
+import com.tmg.lesson9.web.form.ProfileForm;
+import com.tmg.lesson9.web.form.RegistrationForm;
 import org.springframework.stereotype.Component;
 
 /**
- *      Implementation of UserConverter. Class have convert methods that convert:
- *  from RegistrationForm to UserModel;
- *  from UserModel to ProfileForm;
+ * Implementation of UserConverter. Class have convert methods that convert:
+ * from RegistrationForm to UserModel;
+ * from UserModel to ProfileForm;
  */
 
 @Component("userConverter")
@@ -16,7 +16,7 @@ public class DefaultUserConverterImpl implements UserConverter {
 
     @Override
     public UserModel convertRegistrationFormToUserModel(RegistrationForm registrationForm) {
-        if(registrationForm == null){
+        if (registrationForm == null) {
             return null;
         }
         UserModel userModel = new UserModel();

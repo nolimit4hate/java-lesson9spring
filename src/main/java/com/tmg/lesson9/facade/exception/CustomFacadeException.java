@@ -1,7 +1,7 @@
 package com.tmg.lesson9.facade.exception;
 
 /**
- *  custom specific exception for facade layer
+ * custom specific exception for facade layer
  */
 
 public class CustomFacadeException extends RuntimeException {

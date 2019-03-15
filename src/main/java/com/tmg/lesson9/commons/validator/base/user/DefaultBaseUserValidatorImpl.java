@@ -4,16 +4,16 @@ import com.tmg.lesson9.commons.validator.base.BaseDateTimeValidator;
 import com.tmg.lesson9.commons.validator.base.BaseNameValidator;
 import com.tmg.lesson9.commons.validator.base.BasePasswordValidator;
 import com.tmg.lesson9.commons.validator.base.BaseStringFieldValidator;
-import com.tmg.lesson9.model.user.UserModel;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseDateTimeValidatorImpl;
-import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseStringFieldValidatorImpl;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseNameValidatorImpl;
 import com.tmg.lesson9.commons.validator.base.impl.DefaultBasePasswordValidatorImpl;
+import com.tmg.lesson9.commons.validator.base.impl.DefaultBaseStringFieldValidatorImpl;
+import com.tmg.lesson9.model.user.UserModel;
 import org.springframework.stereotype.Component;
 
 /**
- *      default implementation of base UserModel validator interface. This base message validator implementation was created
- *  to help realize same specific class for each web program layer(facade, service, dao)
+ * default implementation of base UserModel validator interface. This base message validator implementation was created
+ * to help realize same specific class for each web program layer(facade, service, dao)
  */
 
 @Component("baseUserValidator")
@@ -66,7 +66,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
 
     @Override
     public boolean isUserModelValid(UserModel userModel) throws IllegalArgumentException {
-        if(userModel == null){
+        if (userModel == null) {
             throw new IllegalArgumentException("user model cant be null");
         }
         this.user = userModel;
@@ -101,34 +101,34 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
 
     private boolean isIdValid() throws IllegalArgumentException {
         int userId = user.getId();
-        if(userId >= 0){
+        if (userId >= 0) {
             return true;
         } else {
             throw new IllegalArgumentException("user id must be >= 0");
         }
     }
 
-    private boolean isNameValid() throws IllegalArgumentException{
+    private boolean isNameValid() throws IllegalArgumentException {
         return isUserNameValid(user.getUserName());
     }
 
-    private boolean isPasswordValid() throws IllegalArgumentException{
+    private boolean isPasswordValid() throws IllegalArgumentException {
         return isPasswordValid(user.getPassword());
     }
 
-    private boolean isEmailValid() throws IllegalArgumentException{
+    private boolean isEmailValid() throws IllegalArgumentException {
         return baseStringFieldValidator.isStringFieldValid(user.getEmail());
     }
 
-    private boolean isCountryValid() throws IllegalArgumentException{
+    private boolean isCountryValid() throws IllegalArgumentException {
         return baseStringFieldValidator.isStringFieldValid(user.getCountry());
     }
 
-    private boolean isGenderValid() throws IllegalArgumentException{
+    private boolean isGenderValid() throws IllegalArgumentException {
         return baseStringFieldValidator.isStringFieldValid(user.getGender());
     }
 
-    private boolean isDateTimeValid() throws IllegalArgumentException{
+    private boolean isDateTimeValid() throws IllegalArgumentException {
         return baseDateTimeValidator.isDateTimeStringValid(user.getCreationDateTime());
     }
 

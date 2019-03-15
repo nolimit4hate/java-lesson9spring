@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- *  default implementation of base name validator interface.
+ * default implementation of base name validator interface.
  */
 
 @Component("baseNameValidator")
@@ -20,11 +20,11 @@ public class DefaultBaseNameValidatorImpl implements BaseNameValidator {
      */
 
     @Override
-    public boolean isUserNameValid(String userName) throws IllegalArgumentException{
-        if(userName == null || userName.isEmpty()){
+    public boolean isUserNameValid(String userName) throws IllegalArgumentException {
+        if (userName == null || userName.isEmpty()) {
             throw new IllegalArgumentException("name cant be null or empty");
         }
-        if(StringUtils.containsAny(userName, ' ', ',', '/', ':')){
+        if (StringUtils.containsAny(userName, ' ', ',', '/', ':')) {
             throw new IllegalArgumentException("name cant contain symbols space, \',\', \'/\', \':\'");
         } else {
             return true;

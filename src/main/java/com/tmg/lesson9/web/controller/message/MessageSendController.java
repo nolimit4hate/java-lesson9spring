@@ -27,24 +27,24 @@ public class MessageSendController {
     MessageFacade messageFacade;
 
     @GetMapping(value = "/sendMessage")
-    public String makeMessage(Model model){
-            model.addAttribute(new MessageSendForm(sessionUserData.getUserName()));
-            return "sendMassage";
+    public String makeMessage(Model model) {
+        model.addAttribute(new MessageSendForm(sessionUserData.getUserName()));
+        return "sendMassage";
     }
 
     @PostMapping(value = "/processMessage")
-    public String processMessage(@ModelAttribute MessageSendForm messageSendForm){
-            messageSendForm.setMessageCreator(sessionUserData.getUserName());
-            if(messageFacade.addMessage(messageSendForm)){
-                return "sendMessageSuccess";
-            } else {
-                return "redirect:/sendMessage";
-            }
+    public String processMessage(@ModelAttribute MessageSendForm messageSendForm) {
+        messageSendForm.setMessageCreator(sessionUserData.getUserName());
+        if (messageFacade.addMessage(messageSendForm)) {
+            return "sendMessageSuccess";
+        } else {
+            return "redirect:/sendMessage";
+        }
 
     }
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
-    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception){
+    public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception) {
         return ErrorModelViewCreator.createErrorModelView(exception, "Send message error");
     }
 }

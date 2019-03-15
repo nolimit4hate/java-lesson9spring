@@ -1,6 +1,8 @@
 package com.tmg.lesson9.model.user;
 
-public class UserModel  {
+import java.util.Objects;
+
+public class UserModel {
 
     private int id = 0;
     private String userName;
@@ -77,5 +79,24 @@ public class UserModel  {
                 ", gender='" + gender + '\'' +
                 ", creationDateTime='" + creationDateTime + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserModel userModel = (UserModel) o;
+        return getId() == userModel.getId() &&
+                getUserName().equals(userModel.getUserName()) &&
+                getEmail().equals(userModel.getEmail()) &&
+                getPassword().equals(userModel.getPassword()) &&
+                getCountry().equals(userModel.getCountry()) &&
+                getGender().equals(userModel.getGender()) &&
+                getCreationDateTime().equals(userModel.getCreationDateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUserName(), getEmail(), getPassword(), getCountry(), getGender(), getCreationDateTime());
     }
 }

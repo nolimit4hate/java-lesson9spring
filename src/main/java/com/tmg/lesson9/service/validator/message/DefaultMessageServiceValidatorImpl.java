@@ -1,9 +1,9 @@
 package com.tmg.lesson9.service.validator.message;
 
-import com.tmg.lesson9.service.exception.CustomServiceException;
-import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.commons.validator.base.BaseStringFieldValidator;
 import com.tmg.lesson9.commons.validator.base.message.BaseMessageValidator;
+import com.tmg.lesson9.model.message.MessageModel;
+import com.tmg.lesson9.service.exception.CustomServiceException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,22 +19,22 @@ public class DefaultMessageServiceValidatorImpl implements MessageServiceValidat
 
     @Override
     public boolean isMessageCreatorValid(String creator) throws CustomServiceException {
-        try{
+        try {
             return baseMessageValidator.isMessageCreatorValid(creator);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new CustomServiceException(e.getMessage(), e);
         }
     }
 
     @Override
     public boolean isMessageModelValid(MessageModel messageModel) throws CustomServiceException {
-        try{
+        try {
             baseMessageValidator.isMessageModelValid(messageModel);
             // valid business logic
             baseStringFieldValidator.isStringFieldsValidByLength(5, 50, messageModel.getMessageTopic());
             baseStringFieldValidator.isStringFieldsValidByLength(10, 200, messageModel.getMessageBody());
             return true;
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new CustomServiceException(e.getMessage(), e);
         }
     }
