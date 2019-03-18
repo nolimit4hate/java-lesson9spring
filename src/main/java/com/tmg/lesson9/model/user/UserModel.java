@@ -12,6 +12,19 @@ public class UserModel {
     private String gender;
     private String creationDateTime;
 
+    public UserModel() {
+    }
+
+    public UserModel(int id, String userName, String email, String password, String country, String gender, String creationDateTime) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.gender = gender;
+        this.creationDateTime = creationDateTime;
+    }
+
     public int getId() {
         return id;
     }

@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-<!-- context config.db.config path -->
-<context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/spring/appContextConfig.xml</param-value>
-</context-param>
-
-<listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-</listener>
-<!-- dispatcher servlet -->
-<servlet>
-    <servlet-name>mvc-dispatcher</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
+    <!-- context config.db.config path -->
+    <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/appDispatcherServlet/mvc-dispatcher-servlet.xml</param-value>
-    </init-param>
-    
-    <load-on-startup>1</load-on-startup>
-</servlet>
-<!-- mapping dispatcher servlet -->
-<servlet-mapping>
-    <servlet-name>mvc-dispatcher</servlet-name>
-    <url-pattern></url-pattern>
-    <url-pattern>/</url-pattern>
-    <url-pattern>/login</url-pattern>
-</servlet-mapping>
-<!-- error page -->
+        <param-value>/WEB-INF/spring/appContextConfig.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- dispatcher servlet -->
+    <servlet>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appDispatcherServlet/mvc-dispatcher-servlet.xml</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- mapping dispatcher servlet -->
+    <servlet-mapping>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <url-pattern></url-pattern>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!-- error page -->
     <error-page>
         <location>/error</location>
     </error-page>

@@ -33,13 +33,9 @@ public class DefaultMessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageModel> getAllMessages() throws CustomServiceException, CustomDaoException {
-        try {
-            List<MessageModel> result = messageDao.getAllMessages();
-            messageServiceValidator.isMessageModelListValid(result);
-            return result;
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
+        List<MessageModel> result = messageDao.getAllMessages();
+        messageServiceValidator.isMessageModelListValid(result);
+        return result;
     }
 
     /**
@@ -55,13 +51,9 @@ public class DefaultMessageServiceImpl implements MessageService {
     @Override
     public List<MessageModel> getMessageByCreator(String creatorName) throws CustomServiceException, CustomDaoException {
         messageServiceValidator.isMessageCreatorValid(creatorName);
-        try {
-            List<MessageModel> result = messageDao.getMessagesByCreator(creatorName);
-            messageServiceValidator.isMessageModelListValid(result);
-            return result;
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
+        List<MessageModel> result = messageDao.getMessagesByCreator(creatorName);
+        messageServiceValidator.isMessageModelListValid(result);
+        return result;
     }
 
     /**
@@ -76,10 +68,6 @@ public class DefaultMessageServiceImpl implements MessageService {
     @Override
     public boolean addMessage(MessageModel messageModel) throws CustomServiceException, CustomDaoException {
         messageServiceValidator.isMessageModelValid(messageModel);
-        try {
-            return messageDao.insertIntoMessages(messageModel);
-        } catch (CustomDaoException e) {
-            throw new CustomServiceException(e.getMessage(), e);
-        }
+        return messageDao.insertIntoMessages(messageModel);
     }
 }

@@ -8,6 +8,9 @@ public class CustomServiceException extends RuntimeException {
 
     private String message;
 
+    public CustomServiceException() {
+    }
+
     public CustomServiceException(String message) {
         this.message = message;
     }

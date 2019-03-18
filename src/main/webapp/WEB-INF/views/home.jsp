@@ -1,7 +1,6 @@
-<%@ page import="java.util.Enumeration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" session="true" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -10,11 +9,14 @@
 </head>
 <body>
 <div align="center">
-    <p align="center"><h1>home</h1></p>
+    <p align="center">
+    <h1>home</h1></p>
 
     <c:if test="${not empty userName}">
-        <p align="center"><h2>${userName}</h2></p>
-        <p align="center"><h2>${userIp}</h2></p>
+        <p align="center">
+        <h2>${userName}</h2></p>
+        <p align="center">
+        <h2>${userIp}</h2></p>
         <p align="center"><a href='<spring:url value="/logout"></spring:url>'>goto Logout</a></p>
         <p align="center"><a href='<spring:url value="/profile/${userName}"></spring:url>'>goto Profile</a></p>
         <p align="center"><a href='<spring:url value="/sendMessage"></spring:url>'>goto SendMessage</a></p>

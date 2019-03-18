@@ -10,6 +10,17 @@ public class MessageModel {
     private String messageCreator;
     private String dateTimeCreation;
 
+    public MessageModel() {
+    }
+
+    public MessageModel(int id, String messageTopic, String messageBody, String messageCreator, String dateTimeCreation) {
+        this.id = id;
+        this.messageTopic = messageTopic;
+        this.messageBody = messageBody;
+        this.messageCreator = messageCreator;
+        this.dateTimeCreation = dateTimeCreation;
+    }
+
     public int getId() {
         return id;
     }
