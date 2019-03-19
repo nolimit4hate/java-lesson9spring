@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * Class have methods that processing input from controller user data then validate and convert it to needed format for service layer
+ * Class have methods that processing input from controller dao.dao data then validate and convert it to needed format for service layer
  * and send it to service layer.
  * Then validate gotten data from service layer and send it to controller that call facade method.
  * If any input data is invalidate then throw CustomFacadeException.
@@ -38,8 +38,8 @@ public class DefaultUserFacadeImpl implements UserFacade {
      * Method check input data for valid. Then call service method userService.getUserModelByName() with input @param userName
      * parameter for getting UserModel object. Then check getting UserModel object for valid and convert it into ProfileForm object
      *
-     * @param userName string with user name information
-     * @return ProfileForm object that contains information about user with user name= @param userName
+     * @param userName string with dao.dao name information
+     * @return ProfileForm object that contains information about dao.dao with dao.dao name= @param userName
      * @throws CustomFacadeException  if userName is invalid or if ProfileForm object is invalid
      * @throws CustomServiceException if service layer throw exception
      * @throws CustomDaoException     if dao layer throw exception
@@ -58,8 +58,8 @@ public class DefaultUserFacadeImpl implements UserFacade {
      * Method check LoginForm object for valid. Then call service userService.isUserExistByNamePassword() method
      * and return result of this calling.
      *
-     * @param userNamePassword LoginForm object that contain information about user name and user password
-     * @return true if userService.isUserExistByNamePassword() return true; exactly if user with this user name and password
+     * @param userNamePassword LoginForm object that contain information about dao.dao name and dao.dao password
+     * @return true if userService.isUserExistByNamePassword() return true; exactly if dao.dao with this dao.dao name and password
      * exists in database
      * @throws CustomFacadeException  if LoginForm object is invalid
      * @throws CustomServiceException if service layer throw exception
@@ -79,7 +79,7 @@ public class DefaultUserFacadeImpl implements UserFacade {
      * Method validate RegistrationForm object then convert it into UserModel object and add date-time data to UserModel object.
      * After all call service method userService.addUser() and return result of service method.
      *
-     * @param registrationForm RegistrationForm object with information about user
+     * @param registrationForm RegistrationForm object with information about dao.dao
      * @return true if data from RegistrationForm object was edded successfully
      * @throws CustomFacadeException  if RegistrationForm object is invalid
      * @throws CustomServiceException if service layer throw exception

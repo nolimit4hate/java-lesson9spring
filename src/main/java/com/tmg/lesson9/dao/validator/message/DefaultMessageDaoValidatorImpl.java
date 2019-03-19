@@ -6,6 +6,7 @@ import com.tmg.lesson9.model.message.MessageModel;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Class implements MessageFacadeValidator - specific validator for dao layer
@@ -50,6 +51,23 @@ public class DefaultMessageDaoValidatorImpl implements MessageDaoValidator {
     public boolean isMessageModelValid(MessageModel messageModel) throws CustomDaoException {
         try {
             return baseMessageValidator.isMessageModelValid(messageModel);
+        } catch (IllegalArgumentException e) {
+            throw new CustomDaoException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Use implementation of BaseMessageValidator and do specific list of MessageModel`s validation for dao layer
+     *
+     * @param messageModelList list of MessageModel type objects with information about message
+     * @return true if input list is valid
+     * @throws CustomDaoException if IllegalArgumentException will be thrown
+     */
+
+    @Override
+    public boolean isMessageModelListValid(List<MessageModel> messageModelList) throws CustomDaoException {
+        try {
+            return baseMessageValidator.isMessageModelListValid(messageModelList);
         } catch (IllegalArgumentException e) {
             throw new CustomDaoException(e.getMessage(), e);
         }

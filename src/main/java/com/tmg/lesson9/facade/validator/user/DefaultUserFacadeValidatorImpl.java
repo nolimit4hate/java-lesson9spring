@@ -22,9 +22,9 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
     BaseStringFieldValidator baseStringFieldValidator;
 
     /**
-     * Method valid input string for user name format
+     * Method valid input string for dao.dao name format
      *
-     * @param name string value that contain user name information
+     * @param name string value that contain dao.dao name information
      * @return true if @param name is valid
      * @throws CustomFacadeException if input @param name is invalid
      */
@@ -39,9 +39,9 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
     }
 
     /**
-     * Method valid input string for user password format
+     * Method valid input string for dao.dao password format
      *
-     * @param password string value that contain user password information
+     * @param password string value that contain dao.dao password information
      * @return true if @param name is valid
      * @throws CustomFacadeException if input @param name is invalid
      */
@@ -59,7 +59,7 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
      * Method valid input RegistrationForm object. Call isRegistrationFormAllParamsValid() method for validate all
      * fields of input RegistrationForm object.
      *
-     * @param registrationForm RegistrationForm object that contain information about user
+     * @param registrationForm RegistrationForm object that contain information about dao.dao
      * @return true if RegistrationForm object is valid
      * @throws CustomFacadeException if RegistrationForm object is invalid or null
      */
@@ -75,7 +75,7 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
     /**
      * Validate all parameters of RegistrationForm object using baseStringFieldValidator
      *
-     * @param registrationForm RegistrationForm object that contain information about user
+     * @param registrationForm RegistrationForm object that contain information about dao.dao
      * @return true if all fields of RegistrationForm object are valid
      * @throws CustomFacadeException if any field of RegistrationForm object is invalid
      */
@@ -96,7 +96,7 @@ public class DefaultUserFacadeValidatorImpl implements UserFacadeValidator {
     /**
      * Use implementation of BaseUserValidator and do specific UserModel validation for facade layer.
      *
-     * @param userModel UserModel object with information about user
+     * @param userModel UserModel object with information about dao.dao
      * @return true if input UserModel is valid
      * @throws CustomFacadeException if input UserModel is invalid or if IllegalArgumentException will be thrown
      */

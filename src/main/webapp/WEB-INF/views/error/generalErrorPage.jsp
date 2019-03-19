@@ -5,7 +5,7 @@
 
 <html>
 <head>
-    <title>Error</title>
+    <title>Error page</title>
 </head>
 <body>
 <div align="center">
@@ -19,13 +19,13 @@
     <p align="center"><a href='<spring:url value="/home"></spring:url>'>goto Home</a></p>
 
 
-    <c:if test="${sessionScope.get()}">
+    <c:if test="${not empty sessionUserData.userName}">
         <p align="center"><a href='<spring:url value="/logout"></spring:url>'>goto Logout</a></p>
-        <p align="center"><a href='<spring:url value="/profile/${userName}"></spring:url>'>goto Profile</a></p>
+        <p align="center"><a href='<spring:url value="/profile/${sessionUserData.userName}"></spring:url>'>goto Profile</a></p>
         <p align="center"><a href='<spring:url value="/sendMessage"></spring:url>'>goto SendMessage</a></p>
 
     </c:if>
-    <c:if test="${null userName}">
+    <c:if test="${empty sessionUserData.userName}">
         <p align="center"><a href='<spring:url value="/registration"></spring:url>'>goto Registration</a></p>
         <p align="center"><a href='<spring:url value="/login"></spring:url>'>goto Login</a></p>
     </c:if>

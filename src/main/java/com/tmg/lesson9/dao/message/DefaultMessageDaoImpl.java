@@ -1,8 +1,10 @@
 package com.tmg.lesson9.dao.message;
 
 import com.tmg.lesson9.dao.exception.CustomDaoException;
+import com.tmg.lesson9.dao.user.UserDao;
 import com.tmg.lesson9.dao.validator.message.MessageDaoValidator;
 import com.tmg.lesson9.model.message.MessageModel;
+import com.tmg.lesson9.model.user.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,6 +45,8 @@ public class DefaultMessageDaoImpl implements MessageDao {
 
     @Resource
     MessageDaoValidator messageDaoValidator;
+    @Resource
+    UserDao userDao;
     /**
      * NamedParameterJdbcTemplate class with a basic set of JDBC operations, allowing the use of
      * named parameters rather than traditional '?' placeholders.
@@ -80,7 +84,9 @@ public class DefaultMessageDaoImpl implements MessageDao {
 
         MessageMapper messageMapper = new MessageMapper();
         try {
-            return namedJdbcTemplate.query(querySelectAllMessages, messageMapper);
+            List<MessageModel> allDbMessages = namedJdbcTemplate.query(querySelectAllMessages, messageMapper);
+            messageDaoValidator.isMessageModelListValid(allDbMessages);
+            return allDbMessages;
         } catch (DataIntegrityViolationException e) {
             throw new CustomDaoException("DAO Error: something goes wrong in database during searching messages", e);
         }
@@ -110,7 +116,12 @@ public class DefaultMessageDaoImpl implements MessageDao {
         mapSqlParameterSource.addValue("creator", creatorName);
         MessageMapper messageMapper = new MessageMapper();
         try {
-            return namedJdbcTemplate.query(querySelectMessagesByCreator, mapSqlParameterSource, messageMapper);
+            List<MessageModel> creatorMessagesList = namedJdbcTemplate.query(querySelectMessagesByCreator, mapSqlParameterSource, messageMapper);
+            messageDaoValidator.isMessageModelListValid(creatorMessagesList);
+            if(creatorMessagesList.isEmpty()){
+                userDao.selectUserByNameFromUsers(creatorName);
+            }
+            return creatorMessagesList;
         } catch (DataIntegrityViolationException e) {
             throw new CustomDaoException("DAO Error: message creator name={" + creatorName + "} is not found in database", e);
         }

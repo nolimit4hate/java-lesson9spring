@@ -49,7 +49,7 @@ public class LoginController {
         }
         request.getRemoteAddr();
         if (userFacade.doLogin(loginForm)) {
-//            add session data - user name and ip
+            // add session data - dao.dao name and ip
             sessionUserData.setUserName(loginForm.getName());
             sessionUserData.setUserIP(request.getRemoteAddr());
             return "redirect:/home";
@@ -62,6 +62,6 @@ public class LoginController {
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
     public ModelAndView handleFacadeException(HttpServletRequest request, RuntimeException exception) {
-        return ErrorModelViewCreator.createErrorModelView(exception, "Login error");
+        return ErrorModelViewCreator.createErrorModelView(sessionUserData, exception, "Login error");
     }
 }

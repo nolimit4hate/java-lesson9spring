@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class DefaultBaseNameValidatorImpl implements BaseNameValidator {
 
     /**
-     * method that check string for valid user name format
+     * method that check string for valid dao.dao name format
      *
      * @param userName
      * @return true if input string is valid

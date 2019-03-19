@@ -25,9 +25,9 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     BaseStringFieldValidator baseStringFieldValidator;
 
     /**
-     * Use implementation of BaseUserValidator and do specific user name validation for dao layer
+     * Use implementation of BaseUserValidator and do specific dao.dao name validation for dao layer
      *
-     * @param name input string with user name
+     * @param name input string with dao.dao name
      * @return true if input string is valid
      * @throws CustomDaoException if IllegalArgumentException will be thrown
      */
@@ -42,9 +42,9 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     }
 
     /**
-     * Use implementation of BaseUserValidator and do specific user password validation for dao layer
+     * Use implementation of BaseUserValidator and do specific dao.dao password validation for dao layer
      *
-     * @param password input string value with user password information
+     * @param password input string value with dao.dao password information
      * @return true if input string is valid
      * @throws CustomDaoException if IllegalArgumentException will be thrown
      */
@@ -61,7 +61,7 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
     /**
      * Use implementation of BaseUserValidator and do specific UserModel validation for dao layer.
      *
-     * @param userModel UserModel object with information about user
+     * @param userModel UserModel object with information about dao.dao
      * @return true if all fields of UserModel object are valid
      * @throws CustomDaoException if input UserModel is invalid or if IllegalArgumentException will be thrown
      */
@@ -77,8 +77,8 @@ public class DefaultUserDaoValidatorImpl implements UserDaoValidator {
 
                 return true;
             } else {
-                throw new CustomDaoException("user model fields user name, email, password length must be from 0 to 40;" +
-                        "user model field dateTime length must be from 0 to 20");
+                throw new CustomDaoException("dao.dao model fields dao.dao name, email, password length must be from 0 to 40;" +
+                        "dao.dao model field dateTime length must be from 0 to 20");
             }
         } catch (IllegalArgumentException e) {
             throw new CustomDaoException(e.getMessage(), e);

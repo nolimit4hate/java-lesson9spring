@@ -45,6 +45,6 @@ public class MessageSendController {
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
     public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception) {
-        return ErrorModelViewCreator.createErrorModelView(exception, "Send message error");
+        return ErrorModelViewCreator.createErrorModelView(sessionUserData, exception, "Send message error");
     }
 }

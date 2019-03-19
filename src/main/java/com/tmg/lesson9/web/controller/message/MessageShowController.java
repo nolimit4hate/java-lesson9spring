@@ -5,6 +5,7 @@ import com.tmg.lesson9.facade.exception.CustomFacadeException;
 import com.tmg.lesson9.facade.message.MessageFacade;
 import com.tmg.lesson9.service.exception.CustomServiceException;
 import com.tmg.lesson9.web.controller.error.ErrorModelViewCreator;
+import com.tmg.lesson9.web.data.SessionUserData;
 import com.tmg.lesson9.web.form.MessageShowForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ public class MessageShowController {
 
     @Resource
     private MessageFacade messageFacade;
+    @Resource
+    SessionUserData sessionUserData;
 
     @GetMapping(value = "/profile/{profileName:.+}/messages")
     public String showUserMessage(@PathVariable String profileName, Model model) {
@@ -37,6 +40,6 @@ public class MessageShowController {
 
     @ExceptionHandler({CustomFacadeException.class, CustomServiceException.class, CustomDaoException.class})
     public ModelAndView handleFacadeException(HttpServletRequest request, Exception exception) {
-        return ErrorModelViewCreator.createErrorModelView(exception, "Show message error");
+        return ErrorModelViewCreator.createErrorModelView(sessionUserData, exception, "Show message error");
     }
 }

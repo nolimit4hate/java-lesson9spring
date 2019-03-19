@@ -75,7 +75,7 @@ public class DefaultBaseMessageValidatorImpl implements BaseMessageValidator {
     /**
      * check for valid message creator field of @param message
      *
-     * @param creator input string means user name who create message
+     * @param creator input string means dao.dao name who create message
      * @return true if input string is valid
      * @throws IllegalArgumentException if input string is not valid
      */

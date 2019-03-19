@@ -99,8 +99,7 @@ public class UserModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserModel userModel = (UserModel) o;
-        return getId() == userModel.getId() &&
-                getUserName().equals(userModel.getUserName()) &&
+        return getUserName().equals(userModel.getUserName()) &&
                 getEmail().equals(userModel.getEmail()) &&
                 getPassword().equals(userModel.getPassword()) &&
                 getCountry().equals(userModel.getCountry()) &&

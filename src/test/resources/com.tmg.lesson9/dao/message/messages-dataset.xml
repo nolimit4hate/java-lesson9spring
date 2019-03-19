@@ -1,0 +1,52 @@
+<dataset>
+    <!--Adding users-->
+    <users
+            user_id="1"
+            user_name="helloboy"
+            user_email="helloboy@boy.ru"
+            user_password="123123"
+            user_gender="Male"
+            user_country="Ukraine"
+            creation_date_time="2019-03-11 22:32:56"
+    />
+    <users
+            user_id="23"
+            user_name="humhum"
+            user_email="hum@hum.com"
+            user_password="123123"
+            user_gender="Female"
+            user_country="USA"
+            creation_date_time="2019-03-12 09:13:10"
+    />
+    <users
+            user_id="29"
+            user_name="terminator"
+            user_email="terminator@gm.com"
+            user_password="123123"
+            user_gender="Male"
+            user_country="Usa"
+            creation_date_time="2019-03-13 16:25:14"
+    />
+    <!--Adding messages-->
+    <messages
+            message_id="1"
+            message_topic="new topic helloboy"
+            message_body="newnewnew bodbodybody11"
+            message_creator="helloboy"
+            message_date_time="2019-03-12 09:31:14"
+    />
+    <messages
+            message_id="2"
+            message_topic="tatatatatata"
+            message_body="body body body body body"
+            message_creator="helloboy"
+            message_date_time="2019-03-12 09:31:36"
+    />
+    <messages
+            message_id="3"
+            message_topic="tytytyty rrrr"
+            message_body="tyty1010 tyty1010 rrr"
+            message_creator="terminator"
+            message_date_time="2019-03-13 16:26:57"
+    />
+</dataset>

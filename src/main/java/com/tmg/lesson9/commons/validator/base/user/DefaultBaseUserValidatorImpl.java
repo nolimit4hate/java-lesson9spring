@@ -25,7 +25,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     BaseDateTimeValidator baseDateTimeValidator = new DefaultBaseDateTimeValidatorImpl();
 
     /**
-     * @param user is checking for valid value of type UserModel. This was made this for more comfortable process of validation.
+     * @param dao.dao is checking for valid value of type UserModel. This was made this for more comfortable process of validation.
      */
 
     private UserModel user;
@@ -33,7 +33,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     /**
      * method check @param userName type value for valid
      *
-     * @param userName string with user name value
+     * @param userName string with dao.dao name value
      * @return true if @param userName is valid
      * @throws IllegalArgumentException if @param userName is invalid
      */
@@ -46,7 +46,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     /**
      * method check @param password string for password validation
      *
-     * @param password string with user password value
+     * @param password string with dao.dao password value
      * @return true if input value is valid
      * @throws IllegalArgumentException if input value is invalid
      */
@@ -67,7 +67,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     @Override
     public boolean isUserModelValid(UserModel userModel) throws IllegalArgumentException {
         if (userModel == null) {
-            throw new IllegalArgumentException("user model cant be null");
+            throw new IllegalArgumentException("dao.dao model cant be null");
         }
         this.user = userModel;
         isAllParamsValid();
@@ -75,10 +75,10 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     }
 
     /**
-     * method checks all fields of @param user for valid
+     * method checks all fields of @param dao.dao for valid
      *
-     * @return true if all fields of @param user is valid
-     * @throws IllegalArgumentException if any field of @param user is invalid
+     * @return true if all fields of @param dao.dao is valid
+     * @throws IllegalArgumentException if any field of @param dao.dao is invalid
      */
 
     private boolean isAllParamsValid() throws IllegalArgumentException {
@@ -93,7 +93,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
     }
 
     /**
-     * check for valid userId field of @param user
+     * check for valid userId field of @param dao.dao
      *
      * @return true if userId field is positive
      * @throws IllegalArgumentException if userId is negative
@@ -104,7 +104,7 @@ public class DefaultBaseUserValidatorImpl implements BaseUserValidator {
         if (userId >= 0) {
             return true;
         } else {
-            throw new IllegalArgumentException("user id must be >= 0");
+            throw new IllegalArgumentException("dao.dao id must be >= 0");
         }
     }
 

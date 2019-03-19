@@ -3,10 +3,13 @@
          xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-    <!-- context config.db.config path -->
+    <!-- context spring config path -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/appContextConfig.xml</param-value>
+        <param-value>
+            /WEB-INF/spring/appContextConfig.xml,
+            /WEB-INF/spring/appContextDBConfig.xml
+        </param-value>
     </context-param>
 
     <listener>

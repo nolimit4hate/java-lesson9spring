@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * Service class for processing user business logic.
+ * Service class for processing dao.dao business logic.
  */
 
 @Service("userService")
@@ -22,12 +22,12 @@ public class DefaultUserServiceImpl implements UserService {
     UserServiceValidator userServiceValidator;
 
     /**
-     * Method valid userName string that contain user name data. Valid userName and call userDao.selectUserByNameFromUsers()
-     * with parameter userName and get UserModel object that contain information about user in database. Then validate
+     * Method valid userName string that contain dao.dao name data. Valid userName and call userDao.selectUserByNameFromUsers()
+     * with parameter userName and get UserModel object that contain information about dao.dao in database. Then validate
      * gotten UserModel object and return UserModel
      *
-     * @param userName input string that contain user name data
-     * @return UserModel object that contan data about user with user name @param userName
+     * @param userName input string that contain dao.dao name data
+     * @return UserModel object that contan data about dao.dao with dao.dao name @param userName
      * @throws CustomServiceException if userName is invalid or if UserModel object is invalid
      * @throws CustomDaoException     if exception is thrown in dao layer
      */
@@ -41,12 +41,12 @@ public class DefaultUserServiceImpl implements UserService {
     }
 
     /**
-     * Method valid input strings userName and userPassword that contain user name and password data.
+     * Method valid input strings userName and userPassword that contain dao.dao name and password data.
      * then call userDao.selectUserByNamePasswordFromUsers() method for getting result and return it.
      *
-     * @param userName     String with user name data
-     * @param userPassword String with user password data
-     * @return true if user with current user name and password is exist
+     * @param userName     String with dao.dao name data
+     * @param userPassword String with dao.dao password data
+     * @return true if dao.dao with current dao.dao name and password is exist
      * @throws CustomServiceException if input userName or userPassword is invalid
      * @throws CustomDaoException     if exception is thrown in dao layer
      */
@@ -62,8 +62,8 @@ public class DefaultUserServiceImpl implements UserService {
      * Method valid input UserModel object then call userDao.insertIntoUsers() method from dao layer and return
      * it result.
      *
-     * @param userModel UserModel object that contain data about user
-     * @return true if user data was added to database successfully
+     * @param userModel UserModel object that contain data about dao.dao
+     * @return true if dao.dao data was added to database successfully
      * @throws CustomServiceException if input UserModel object is not valid
      * @throws CustomDaoException     if exception is thrown in dao layer
      */

@@ -6,45 +6,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <context:component-scan base-package="
-com.tmg.lesson9.web.data
-com.tmg.lesson9.web.form
-com.tmg.lesson9.facade.converter.message
-com.tmg.lesson9.facade.converter.user
-com.tmg.lesson9.dao.user
-com.tmg.lesson9.dao.message
-com.tmg.lesson9.facade.message
-com.tmg.lesson9.facade.user
-com.tmg.lesson9.service.user
-com.tmg.lesson9.service.message
-com.tmg.lesson9.commons.validator.base
-com.tmg.lesson9.facade.validator.user
-com.tmg.lesson9.facade.validator.message
-com.tmg.lesson9.service.validator.user
-com.tmg.lesson9.service.validator.message
-com.tmg.lesson9.dao.validator.user
-com.tmg.lesson9.dao.validator.message
+        com.tmg.lesson9.web.data
+        com.tmg.lesson9.web.form
+        com.tmg.lesson9.facade.converter.message
+        com.tmg.lesson9.facade.converter.user
+        com.tmg.lesson9.facade.message
+        com.tmg.lesson9.facade.user
+        com.tmg.lesson9.facade.validator.user
+        com.tmg.lesson9.facade.validator.message
+        com.tmg.lesson9.service.user
+        com.tmg.lesson9.service.message
+        com.tmg.lesson9.service.validator.user
+        com.tmg.lesson9.service.validator.message
+        com.tmg.lesson9.commons.validator.base
 "/>
-
-    <!-- context placeholder for using properties data-->
-    <context:property-placeholder location="classpath:config/db.postgres/postgres.properties"/>
 
     <!-- session scoped bean wont work without this -->
     <bean id="sessionUserData" class="com.tmg.lesson9.web.data.SessionUserData" scope="session">
         <aop:scoped-proxy/>
     </bean>
-
-    <!-- JDBC config.db.config -->
-    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
-        <property name="driverClassName" value="${db.driverClassName}"/>
-        <property name="url" value="${db.url}"/>
-        <property name="username" value="${db.username}"/>
-        <property name="password" value="${db.password}"/>
-        <property name="initialSize" value="${pool.initializeSize}"/>
-    </bean>
-
-    <!-- JDBC spring template -->
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-        <constructor-arg ref="dataSource"></constructor-arg>
-    </bean>
-
 </beans>
