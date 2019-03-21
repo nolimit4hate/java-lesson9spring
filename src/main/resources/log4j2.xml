@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <!-- loggger properties -->
+    <Properties>
+        <!--[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n-->
+        <!--%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} - - - [%15.15t] %-40.40c{1.} : %m%n%ex-->
+        <Property name="LOG_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
+        <Property name="LOG_PATH">/home/nodota/tea4/javapr/spring007/logs</Property>
+        <Property name="FILE_SIZE">10MB</Property>
+        <Property name="LOG_FILE_PREFIX">lesson9</Property>
+        <Property name="LOG_FILE_SUFFIX">%d{yyyy-MM-dd}-%i.log</Property>
+    </Properties>
+    <!-- Appenders -->
+    <Appenders>
+        <!--Console-->
+        <Console name="consoleLogger" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!--debug lvl file logger-->
+        <RollingFile
+                name="debugFileLogger"
+                fileName="${LOG_PATH}/debug/${LOG_FILE_PREFIX}-debug.log"
+                filePattern="${LOG_PATH}/debug/${LOG_FILE_PREFIX}-debug-${LOG_FILE_SUFFIX}"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${FILE_SIZE}" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+        <!--info-warn lvl file logger-->
+        <RollingFile
+                name="infoFileLogger"
+                fileName="${LOG_PATH}/info/${LOG_FILE_PREFIX}-info.log"
+                filePattern="${LOG_PATH}/info/${LOG_FILE_PREFIX}-info-${LOG_FILE_SUFFIX}"
+                ignoreExceptions="false">
+            <LevelRangeFilter minLevel="INFO" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${FILE_SIZE}" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+        <!--error lvl file logger-->
+        <RollingFile
+                name="errorFileLogger"
+                fileName="${LOG_PATH}/error/${LOG_FILE_PREFIX}-error.log"
+                filePattern="${LOG_PATH}/error/${LOG_FILE_PREFIX}-error-${LOG_FILE_SUFFIX}"
+                ignoreExceptions="false">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${FILE_SIZE}" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+        <!--spring file logger-->
+        <RollingFile
+                name="springFileLogger"
+                fileName="${LOG_PATH}/spring/${LOG_FILE_PREFIX}-spring.log"
+                filePattern="${LOG_PATH}/spring/${LOG_FILE_PREFIX}-spring-${LOG_FILE_SUFFIX}"
+                ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${FILE_SIZE}" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+    </Appenders>
+
+    <!-- Loggers -->
+    <!-- logNames:{consoleLogger, debugFileLogger, infoFileLogger, errorFileLogger, springFileLogger}-->
+    <Loggers>
+        <Logger name="com.tmg.lesson9" additivity="false">
+            <AppenderRef ref="debugFileLogger"/>
+            <AppenderRef ref="infoFileLogger" />
+            <AppenderRef ref="errorFileLogger" />
+            <AppenderRef ref="consoleLogger"/>
+        </Logger>
+        <Logger name="org.springframework" additivity="false">
+            <AppenderRef ref="springFileLogger" />
+            <AppenderRef ref="consoleLogger" />
+        </Logger>
+        <Root level="debug">
+            <AppenderRef ref="consoleLogger" />
+        </Root>
+    </Loggers>
+</Configuration>

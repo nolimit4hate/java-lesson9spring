@@ -1,7 +1,12 @@
 package com.tmg.lesson9.commons.validator.base.impl;
 
 import com.tmg.lesson9.commons.validator.base.BaseDateTimeValidator;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Component;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * default implementation of base date-time validator interface.
@@ -9,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component("baseDateTimeValidator")
 public class DefaultBaseDateTimeValidatorImpl implements BaseDateTimeValidator {
+    private static final Logger loggger = LogManager.getLogger(DefaultBaseDateTimeValidatorImpl.class);
 
     /**
      * method that check string for valid date-time format

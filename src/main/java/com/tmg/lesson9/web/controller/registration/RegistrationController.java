@@ -22,6 +22,9 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * {@code RegisterUserController} class is controller that process all requests with url that ends
  * with context path + "/registration" with methods get and post.
@@ -39,6 +42,8 @@ public class RegistrationController {
      * @param facadeUser represent facade layer for dao.dao
      */
 
+    private static final Logger logger = LogManager.getLogger(RegistrationController.class);
+
     @Resource
     private UserFacade userFacade;
     @Resource
@@ -52,6 +57,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String addUser(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm, BindingResult bindingResult, Model model) {
+
         if (bindingResult.hasErrors()) {
             return "registration";
         }

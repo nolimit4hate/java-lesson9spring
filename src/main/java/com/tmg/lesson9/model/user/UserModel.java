@@ -94,6 +94,14 @@ public class UserModel {
                 '}';
     }
 
+    public String toStringForLogger() {
+        return "UserModel{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", creationDateTime='" + creationDateTime + '\'' +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

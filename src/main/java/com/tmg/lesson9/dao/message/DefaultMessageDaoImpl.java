@@ -1,10 +1,13 @@
 package com.tmg.lesson9.dao.message;
 
 import com.tmg.lesson9.dao.exception.CustomDaoException;
+import com.tmg.lesson9.dao.user.DefaultUserDaoImpl;
 import com.tmg.lesson9.dao.user.UserDao;
 import com.tmg.lesson9.dao.validator.message.MessageDaoValidator;
 import com.tmg.lesson9.model.message.MessageModel;
 import com.tmg.lesson9.model.user.UserModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,8 @@ import java.util.Map;
 
 @Repository("messageDao")
 public class DefaultMessageDaoImpl implements MessageDao {
+
+    private static final Logger logger = LogManager.getLogger(DefaultMessageDaoImpl.class);
 
     private final static String DB_MESSAGE_TABLE = "messages";
     private final static String DB_MESSAGE_ID = "message_id";
@@ -78,17 +84,26 @@ public class DefaultMessageDaoImpl implements MessageDao {
 
     @Override
     public List<MessageModel> getAllMessages() throws CustomDaoException {
-        String querySelectAllMessages =
-                "SELECT " + DB_MESSAGE_SELECT_PARAMETERS_DIVIDED_BY_COMMA +
-                        " FROM " + DB_MESSAGE_TABLE;
-
-        MessageMapper messageMapper = new MessageMapper();
+        String baseLoggerInfo = "m:{getAllMessages} in:{}";
         try {
-            List<MessageModel> allDbMessages = namedJdbcTemplate.query(querySelectAllMessages, messageMapper);
-            messageDaoValidator.isMessageModelListValid(allDbMessages);
-            return allDbMessages;
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomDaoException("DAO Error: something goes wrong in database during searching messages", e);
+            logger.info(baseLoggerInfo);
+            String querySelectAllMessages =
+                    "SELECT " + DB_MESSAGE_SELECT_PARAMETERS_DIVIDED_BY_COMMA +
+                            " FROM " + DB_MESSAGE_TABLE;
+
+            MessageMapper messageMapper = new MessageMapper();
+            try {
+                List<MessageModel> allDbMessages = namedJdbcTemplate.query(querySelectAllMessages, messageMapper);
+                messageDaoValidator.isMessageModelListValid(allDbMessages);
+                logger.info(baseLoggerInfo + " out:" + Arrays.toString(allDbMessages.toArray()));
+                return allDbMessages;
+            } catch (DataIntegrityViolationException e) {
+                logger.warn(baseLoggerInfo, e);
+                throw new CustomDaoException("DAO Error: something goes wrong in database during searching messages", e);
+            }
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
@@ -106,24 +121,33 @@ public class DefaultMessageDaoImpl implements MessageDao {
 
     @Override
     public List<MessageModel> getMessagesByCreator(String creatorName) throws CustomDaoException {
-        messageDaoValidator.isMessageCreatorValid(creatorName);
-        String querySelectMessagesByCreator =
-                "SELECT " + DB_MESSAGE_SELECT_PARAMETERS_DIVIDED_BY_COMMA +
-                        " FROM " + DB_MESSAGE_TABLE +
-                        " WHERE " + DB_MESSAGE_CREATOR + "= :creator;";
-
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("creator", creatorName);
-        MessageMapper messageMapper = new MessageMapper();
+        String baseLoggerInfo = "m:{getMessagesByCreator} in:{" + creatorName + "}";
         try {
-            List<MessageModel> creatorMessagesList = namedJdbcTemplate.query(querySelectMessagesByCreator, mapSqlParameterSource, messageMapper);
-            messageDaoValidator.isMessageModelListValid(creatorMessagesList);
-            if(creatorMessagesList.isEmpty()){
-                userDao.selectUserByNameFromUsers(creatorName);
+            logger.info(baseLoggerInfo);
+            messageDaoValidator.isMessageCreatorValid(creatorName);
+            String querySelectMessagesByCreator =
+                    "SELECT " + DB_MESSAGE_SELECT_PARAMETERS_DIVIDED_BY_COMMA +
+                            " FROM " + DB_MESSAGE_TABLE +
+                            " WHERE " + DB_MESSAGE_CREATOR + "= :creator;";
+
+            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+            mapSqlParameterSource.addValue("creator", creatorName);
+            MessageMapper messageMapper = new MessageMapper();
+            try {
+                List<MessageModel> creatorMessagesList = namedJdbcTemplate.query(querySelectMessagesByCreator, mapSqlParameterSource, messageMapper);
+                messageDaoValidator.isMessageModelListValid(creatorMessagesList);
+                if (creatorMessagesList.isEmpty()) {
+                    userDao.selectUserByNameFromUsers(creatorName);
+                }
+                logger.info(baseLoggerInfo + " out:" + Arrays.toString(creatorMessagesList.toArray()));
+                return creatorMessagesList;
+            } catch (DataIntegrityViolationException e) {
+                logger.info(baseLoggerInfo + " " + e.getMessage(), e);
+                throw new CustomDaoException("DAO Error: message creator name={" + creatorName + "} is not found in database", e);
             }
-            return creatorMessagesList;
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomDaoException("DAO Error: message creator name={" + creatorName + "} is not found in database", e);
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
@@ -141,18 +165,27 @@ public class DefaultMessageDaoImpl implements MessageDao {
 
     @Override
     public boolean insertIntoMessages(MessageModel messageModel) throws CustomDaoException {
-        messageDaoValidator.isMessageModelValid(messageModel);
-        String queryInputMessage =
-                "INSERT INTO " + DB_MESSAGE_TABLE +
-                        " (" + DB_MESSAGE_INSERT_PARAMETERS_DIVIDED_BY_COMMA + ") " +
-                        "values (:messageTopic, :messageBody, :messageCreator, :messageDateTime)";
-
-        Map<String, String> messageParamMap = getMessageParamMap(messageModel);
+        String baseLoggerInfo = "m:{insertIntoMessages} in:" + messageModel.toString();
         try {
-            namedJdbcTemplate.update(queryInputMessage, messageParamMap);
-            return true;
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomDaoException("DAO Error: message model={" + messageModel.toString() + "} is incorrect", e);
+            logger.info(baseLoggerInfo);
+            messageDaoValidator.isMessageModelValid(messageModel);
+            String queryInputMessage =
+                    "INSERT INTO " + DB_MESSAGE_TABLE +
+                            " (" + DB_MESSAGE_INSERT_PARAMETERS_DIVIDED_BY_COMMA + ") " +
+                            "values (:messageTopic, :messageBody, :messageCreator, :messageDateTime)";
+
+            Map<String, String> messageParamMap = getMessageParamMap(messageModel);
+            try {
+                namedJdbcTemplate.update(queryInputMessage, messageParamMap);
+                logger.info(baseLoggerInfo + "out:{true} - message added to DB");
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                logger.info(baseLoggerInfo + " " + e.getMessage(), e);
+                throw new CustomDaoException("DAO Error: message model={" + messageModel.toString() + "} is incorrect", e);
+            }
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
@@ -164,7 +197,7 @@ public class DefaultMessageDaoImpl implements MessageDao {
      */
 
     private Map<String, String> getMessageParamMap(MessageModel message) {
-        Map<String, String> messageParam = new HashMap();
+        Map<String, String> messageParam = new HashMap<>();
         messageParam.put("messageTopic", message.getMessageTopic());
         messageParam.put("messageBody", message.getMessageBody());
         messageParam.put("messageCreator", message.getMessageCreator());

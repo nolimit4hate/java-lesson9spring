@@ -17,6 +17,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+
 /**
  * Default implementation of UserDao interface. Class make query and send request with query to database then take
  * response from database and process it. After processing send output processing data or throw CustomDaoException.
@@ -24,6 +28,8 @@ import java.util.Map;
 
 @Repository("userDao")
 public class DefaultUserDaoImpl implements UserDao {
+
+    private static final Logger logger = LogManager.getLogger(DefaultUserDaoImpl.class);
 
     private final static String USERS_TABLE = "users";
     private final static String USERS_INSERT_PARAMS_SEPARATED_BY_COMMA =
@@ -33,7 +39,6 @@ public class DefaultUserDaoImpl implements UserDao {
     /**
      * injection default realisation of MessageDaoValidator interface
      *
-     * @param userDaoValidator validator for checking input parameters
      */
 
     @Resource
@@ -42,7 +47,6 @@ public class DefaultUserDaoImpl implements UserDao {
      * NamedParameterJdbcTemplate class with a basic set of JDBC operations, allowing the use of
      * named parameters rather than traditional '?' placeholders.
      *
-     * @param namedJdbcTemplate  object of NamedParameterJdbcTemplate
      */
 
     private NamedParameterJdbcTemplate namedJdbcTemplate;
@@ -50,7 +54,7 @@ public class DefaultUserDaoImpl implements UserDao {
     /**
      * init NamedParameterJdbcTemplate using constructor injection
      *
-     * @param namedJdbcTemplate
+     * @param namedJdbcTemplate NamedParameterJdbcTemplate class with a basic set of JDBC operations
      */
 
     @Autowired
@@ -72,24 +76,34 @@ public class DefaultUserDaoImpl implements UserDao {
 
     @Override
     public UserModel selectUserByNameFromUsers(String userName) throws CustomDaoException {
-        userDaoValidator.isUserNameValid(userName);
-        UserModel userModel;
-        String querySelectUserByName =
-                "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
-                        " FROM " + USERS_TABLE + " WHERE user_name= :name";
+        String baseLoggerInfo = "m:{selectUserByNameFromUsers} in:{userName=" + userName + "}";
         try {
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("name", userName);
-        UserMapper userMapper = new UserMapper();
-            userModel = namedJdbcTemplate.queryForObject(querySelectUserByName, mapSqlParameterSource, userMapper);
-            userDaoValidator.isUserModelValid(userModel);
-            if(!userName.equals(userModel.getUserName())){
-                throw new CustomDaoException("DAO Error: entering name={" + userName + "} is not equals to getting" +
-                        " from BD user model with name={" + userModel.getUserName() + "}");
+            logger.debug(baseLoggerInfo);
+            userDaoValidator.isUserNameValid(userName);
+            UserModel userModel;
+            String querySelectUserByName =
+                    "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
+                            " FROM " + USERS_TABLE + " WHERE user_name= :name";
+            try {
+                MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+                mapSqlParameterSource.addValue("name", userName);
+                UserMapper userMapper = new UserMapper();
+                userModel = namedJdbcTemplate.queryForObject(querySelectUserByName, mapSqlParameterSource, userMapper);
+                userDaoValidator.isUserModelValid(userModel);
+                if (!userName.equals(userModel.getUserName())) {
+                    logger.info(baseLoggerInfo + " not equals with out: user with name={" + userModel.getUserName() + "}");
+                    throw new CustomDaoException("DAO Error: entering name={" + userName + "} is not equals to getting" +
+                            " from BD user model with name={" + userModel.getUserName() + "}");
+                }
+                logger.info(baseLoggerInfo + " out:{user=" + userModel.toStringForLogger() + "}");
+                return userModel;
+            } catch (DataIntegrityViolationException | IncorrectResultSizeDataAccessException e) {
+                logger.info(baseLoggerInfo, e);
+                throw new CustomDaoException("DAO Error: entering name={" + userName + "} is not found in database ", e);
             }
-            return userModel;
-        } catch (DataIntegrityViolationException | IncorrectResultSizeDataAccessException e) {
-            throw new CustomDaoException("DAO Error: entering name={" + userName + "} is not found in database ", e);
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
@@ -110,26 +124,37 @@ public class DefaultUserDaoImpl implements UserDao {
 
     @Override
     public boolean selectUserByNamePasswordFromUsers(String userName, String userPassword) throws CustomDaoException {
-        userDaoValidator.isUserNameValid(userName);
-        userDaoValidator.isUserPasswordValid(userPassword);
-        String querySelectUserByNamePass =
-                "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
-                        " FROM " + USERS_TABLE + " WHERE user_name= :name AND user_password= :password";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("name", userName);
-        mapSqlParameterSource.addValue("password", userPassword);
-        UserMapper userMapper = new UserMapper();
+        String baseLoggerInfo = "m:{selectUserByNamePasswordFromUsers} in:{userName=" + userName + ", userPassword=}";
+        String baseLoggerInfoWrong = "m:{selectUserByNamePasswordFromUsers} in:{userName=" + userName + "," +
+                " userPassword=" + userPassword + "}";
         try {
-            UserModel userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
-            userDaoValidator.isUserModelValid(userModel);
-            if(!userName.equals(userModel.getUserName()) || !userPassword.equals(userModel.getPassword())){
-                throw new CustomDaoException("DAO Error: entering user name or password is not equals to getting " +
-                        "from database user with name or password");
+            logger.info(baseLoggerInfo);
+            userDaoValidator.isUserNameValid(userName);
+            userDaoValidator.isUserPasswordValid(userPassword);
+            String querySelectUserByNamePass =
+                    "SELECT " + USERS_SELECT_PARAMS_SEPARATED_BY_COMMA +
+                            " FROM " + USERS_TABLE + " WHERE user_name= :name AND user_password= :password";
+            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+            mapSqlParameterSource.addValue("name", userName);
+            mapSqlParameterSource.addValue("password", userPassword);
+            UserMapper userMapper = new UserMapper();
+            try {
+                UserModel userModel = namedJdbcTemplate.queryForObject(querySelectUserByNamePass, mapSqlParameterSource, userMapper);
+                userDaoValidator.isUserModelValid(userModel);
+                if (!userName.equals(userModel.getUserName()) || !userPassword.equals(userModel.getPassword())) {
+                    logger.info(baseLoggerInfo + "are not equals with out:{userName=" + userModel.getUserName() + ", userPassword=}");
+                    throw new CustomDaoException("DAO Error: entering user name or password is not equals to getting " +
+                            "from database user with name or password");
+                }
+                return true;
+            } catch (IncorrectResultSizeDataAccessException | DataIntegrityViolationException e) {
+                logger.info(baseLoggerInfo + " no such data in database");
+                throw new CustomDaoException("DAO Error: entering name={" + userName +
+                        "} and password={" + userPassword + "} ", e);
             }
-            return true;
-        } catch (IncorrectResultSizeDataAccessException | DataIntegrityViolationException e) {
-            throw new CustomDaoException("DAO Error: entering name={" + userName +
-                    "} and password={" + userPassword + "} ", e);
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
@@ -147,18 +172,27 @@ public class DefaultUserDaoImpl implements UserDao {
 
     @Override
     public boolean insertIntoUsers(UserModel user) throws CustomDaoException {
-        userDaoValidator.isUserModelValid(user);
-        String queryInputUser =
-                "INSERT INTO " + USERS_TABLE +
-                        " (" + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA + ") " +
-                        " values(:name, :email, :password, :gender, :country, :dateTime);";
-        Map<String, String> userParam = getUserParamMap(user);
+        String baseLoggerInfo = "m:{insertIntoUsers} in:{" + user.toString() + "}";
         try {
-            namedJdbcTemplate.update(queryInputUser, userParam);
-            return true;
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomDaoException("DAO Error: entering name={" + user.getUserName() +
-                    "} or email={" + user.getEmail() + "} already exists", e);
+            logger.info(baseLoggerInfo);
+            userDaoValidator.isUserModelValid(user);
+            String queryInputUser =
+                    "INSERT INTO " + USERS_TABLE +
+                            " (" + USERS_INSERT_PARAMS_SEPARATED_BY_COMMA + ") " +
+                            " values(:name, :email, :password, :gender, :country, :dateTime);";
+            Map<String, String> userParam = getUserParamMap(user);
+            try {
+                namedJdbcTemplate.update(queryInputUser, userParam);
+                logger.info(baseLoggerInfo + " out:{true} - user was added to DB");
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                logger.info(baseLoggerInfo + " out:{" + e.getMessage() + "} - user already exist in DB");
+                throw new CustomDaoException("DAO Error: entering name={" + user.getUserName() +
+                        "} or email={" + user.getEmail() + "} already exists", e);
+            }
+        } catch (Exception e) {
+            logger.warn(baseLoggerInfo, e);
+            throw e;
         }
     }
 
