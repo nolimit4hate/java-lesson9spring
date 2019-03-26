@@ -1,0 +1,12 @@
+Цель: Ознакомление с SpringFramework. Слоеная архитектура корпоративных приложений.
+Ресурсы:
+https://www.youtube.com/playlist?list=PL6jg6AGdCNaWF-sUH2QDudBRXo54zuN1t
+https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html
+https://www.youtube.com/watch?v=2IzzL8vJHr8&list=PLCA5CB42F5A816A17
+Задание:
+Создать веб приложение: Твиттер. Функции: регистрация пользователя, логин/логаут, добавление твита, просмотр списка своих твитов.
+DAO для пользователей, твитов
+Service, реализуем бизнес логику - проверка длины твита.
+Тесты для слоя сервисов
+Facade - для подготовки данных для слоя представления
+SpringMVC+jsp - слой представления
